@@ -48,6 +48,10 @@
                 <Run Text="Estimated time: " FontWeight="SemiBold" />
                 <Run Text="{Binding SelectedTaskEstimatedTimeDisplay, Mode=OneWay}" />
             </TextBlock>
+            <TextBlock Margin="0,0,0,4">
+                <Run Text="Room: " FontWeight="SemiBold" />
+                <Run Text="{Binding SelectedTaskRoomDisplay, Mode=OneWay}" />
+            </TextBlock>
             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8">
                 <Run Text="Depends on: " FontWeight="SemiBold" />
                 <Run Text="{Binding SelectedTaskDependencySummary, Mode=OneWay}" />

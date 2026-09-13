@@ -499,30 +499,30 @@ fields.
 
 #### Automated
 
-- [x] 2.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
-- [x] 2.2 Core unit tests still pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
+- [x] 2.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore` — ab37e2c
+- [x] 2.2 Core unit tests still pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj` — ab37e2c
 
 #### Manual
 
-- [x] 2.3 Opening a project shows the plan canvas with a task list panel docked beside it, listing every task
-- [x] 2.4 Selecting a task in the list highlights its marker on the canvas
-- [x] 2.5 Clicking an existing marker selects it in the list and shows its details
-- [x] 2.6 Selecting a task shows all of its FR-007 fields in the detail readout
-- [x] 2.7 Changing status via the list's quick dropdown recolors the marker immediately
-- [x] 2.8 Creating a new task by clicking empty plan space still works exactly as before
+- [x] 2.3 Opening a project shows the plan canvas with a task list panel docked beside it, listing every task — ab37e2c
+- [x] 2.4 Selecting a task in the list highlights its marker on the canvas — ab37e2c
+- [x] 2.5 Clicking an existing marker selects it in the list and shows its details — ab37e2c
+- [x] 2.6 Selecting a task shows all of its FR-007 fields in the detail readout — ab37e2c
+- [x] 2.7 Changing status via the list's quick dropdown recolors the marker immediately — ab37e2c
+- [x] 2.8 Creating a new task by clicking empty plan space still works exactly as before — ab37e2c
 
 ### Phase 3: Edit Dialog, Dependency Picker & Delete Flow
 
 #### Automated
 
-- [ ] 3.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
-- [ ] 3.2 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
+- [x] 3.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
+- [x] 3.2 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
 
 #### Manual
 
-- [ ] 3.3 Editing a task's full field set persists after save, close, and reopen
-- [ ] 3.4 Changing status via the edit dialog recolors the marker immediately
-- [ ] 3.5 A dependency selection that would create a cycle is rejected and not saved
-- [ ] 3.6 Deleting a task that another task depends on is blocked with a message naming the blocking task(s)
-- [ ] 3.7 Deleting a task with no dependents removes its marker and list row, surviving save/reopen
-- [ ] 3.8 Canceling edit or declining delete confirmation leaves the task and project file unchanged
+- [x] 3.3 Editing a task's full field set persists after save, close, and reopen
+- [x] 3.4 Changing status via the edit dialog recolors the marker immediately
+- [x] 3.5 A dependency selection that would create a cycle is rejected and not saved
+- [x] 3.6 Deleting a task that another task depends on is blocked with a message naming the blocking task(s)
+- [x] 3.7 Deleting a task with no dependents removes its marker and list row, surviving save/reopen
+- [x] 3.8 Canceling edit or declining delete confirmation leaves the task and project file unchanged

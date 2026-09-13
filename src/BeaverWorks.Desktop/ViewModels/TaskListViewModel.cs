@@ -41,6 +41,10 @@ public partial class TaskListViewModel : ObservableObject
     public string SelectedTaskEstimatedTimeDisplay =>
         SelectedTask?.EstimatedTime is { } time ? time.ToString("g") : "—";
 
+    /// <summary>The selected task's room, or a placeholder when unset.</summary>
+    public string SelectedTaskRoomDisplay =>
+        string.IsNullOrWhiteSpace(SelectedTask?.RoomId) ? "—" : SelectedTask.RoomId;
+
     /// <summary>Raised when the selection changes from user interaction with the list itself — not
     /// when selection is driven externally via <see cref="Select"/>, which avoids a canvas↔list sync loop.</summary>
     public event EventHandler<Guid?>? SelectionChanged;
@@ -99,6 +103,7 @@ public partial class TaskListViewModel : ObservableObject
         OnPropertyChanged(nameof(SelectedTaskDependencySummary));
         OnPropertyChanged(nameof(SelectedTaskEstimatedCostDisplay));
         OnPropertyChanged(nameof(SelectedTaskEstimatedTimeDisplay));
+        OnPropertyChanged(nameof(SelectedTaskRoomDisplay));
 
         if (_suppressSelectionChanged)
         {

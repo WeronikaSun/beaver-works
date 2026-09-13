@@ -75,6 +75,14 @@ public partial class App : Application
     {
         var workspaceViewModel = new ProjectWorkspaceViewModel(args.Project, args.FilePath, _projectStore!);
         workspaceViewModel.NewTaskRequested += (_, position) => ShowNewTaskDialog(workspaceViewModel, position);
+        workspaceViewModel.TaskList.EditRequested += (_, taskId) => ShowEditTaskDialog(workspaceViewModel, taskId);
+        workspaceViewModel.TaskList.DeleteRequested += (_, taskId) => ConfirmAndDeleteTask(workspaceViewModel, taskId);
+        workspaceViewModel.DeleteBlocked += (_, blockingTaskNames) => MessageBox.Show(
+            _mainWindow,
+            $"This task can't be deleted because the following task(s) depend on it: {blockingTaskNames}",
+            "Delete blocked",
+            MessageBoxButton.OK,
+            MessageBoxImage.Warning);
 
         _mainWindow!.Content = new ProjectWorkspaceView { DataContext = workspaceViewModel };
     }
@@ -86,6 +94,54 @@ public partial class App : Application
 
         var dialog = new NewTaskDialog(newTaskViewModel) { Owner = _mainWindow };
         dialog.ShowDialog();
+    }
+
+    private void ShowEditTaskDialog(ProjectWorkspaceViewModel workspaceViewModel, Guid taskId)
+    {
+        var task = workspaceViewModel.TaskList.Tasks.FirstOrDefault(t => t.Id == taskId);
+        if (task is null)
+        {
+            return;
+        }
+
+        var editTaskViewModel = new EditTaskViewModel(task, workspaceViewModel.TaskList.Tasks, workspaceViewModel.Project);
+        editTaskViewModel.TaskUpdated += (_, updated) => workspaceViewModel.UpdateTask(updated);
+
+        var dialog = new EditTaskDialog(editTaskViewModel) { Owner = _mainWindow };
+        dialog.ShowDialog();
+    }
+
+    private void ConfirmAndDeleteTask(ProjectWorkspaceViewModel workspaceViewModel, Guid taskId)
+    {
+        var task = workspaceViewModel.TaskList.Tasks.FirstOrDefault(t => t.Id == taskId);
+        if (task is null)
+        {
+            return;
+        }
+
+        var dependents = workspaceViewModel.Project.GetDependents(taskId);
+        if (dependents.Count > 0)
+        {
+            MessageBox.Show(
+                _mainWindow,
+                $"This task can't be deleted because the following task(s) depend on it: {string.Join(", ", dependents.Select(t => t.Title))}",
+                "Delete blocked",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+            return;
+        }
+
+        var result = MessageBox.Show(
+            _mainWindow,
+            $"Delete task \"{task.Title}\"? This cannot be undone.",
+            "Delete task",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (result == MessageBoxResult.Yes)
+        {
+            workspaceViewModel.DeleteTask(taskId);
+        }
     }
 }
 

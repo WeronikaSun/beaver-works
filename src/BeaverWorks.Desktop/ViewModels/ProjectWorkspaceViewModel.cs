@@ -20,12 +20,21 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
 
     public string ProjectName => _project.Name;
 
+    /// <summary>The underlying project, exposed so the edit dialog can validate dependency cycles against the full task graph.</summary>
+    public Project Project => _project;
+
     public PlanCanvasViewModel Canvas { get; }
 
     public TaskListViewModel TaskList { get; }
 
     /// <summary>Raised with a newly clicked plan position when empty plan space is clicked (relayed from Canvas, unchanged).</summary>
     public event EventHandler<PlanPoint>? NewTaskRequested;
+
+    /// <summary>
+    /// Raised when a delete was blocked because other tasks depend on the
+    /// target, naming the blocking task titles for display in a message box.
+    /// </summary>
+    public event EventHandler<string>? DeleteBlocked;
 
     public ProjectWorkspaceViewModel(Project project, string projectFilePath, IProjectStore projectStore)
     {
@@ -49,6 +58,7 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
     public void AddTask(RenovationTask task)
     {
         _project.Tasks.Add(task);
+        _project.UpdatedAt = DateTimeOffset.UtcNow;
         _projectStore.Save(_project, _projectFilePath);
 
         Canvas.AddMarker(task);
@@ -69,9 +79,39 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
         }
 
         _project.Tasks[index] = task;
+        _project.UpdatedAt = DateTimeOffset.UtcNow;
         _projectStore.Save(_project, _projectFilePath);
 
         Canvas.UpdateMarker(task);
+        TaskList.Refresh(_project.Tasks);
+    }
+
+    /// <summary>
+    /// Removes a task from the project, unless another task still depends
+    /// on it — in which case the delete is blocked and
+    /// <see cref="DeleteBlocked"/> is raised naming the blocking task(s),
+    /// leaving the project untouched.
+    /// </summary>
+    public void DeleteTask(Guid taskId)
+    {
+        var dependents = _project.GetDependents(taskId);
+        if (dependents.Count > 0)
+        {
+            var names = string.Join(", ", dependents.Select(t => t.Title));
+            DeleteBlocked?.Invoke(this, names);
+            return;
+        }
+
+        var removed = _project.Tasks.RemoveAll(t => t.Id == taskId) > 0;
+        if (!removed)
+        {
+            return;
+        }
+
+        _project.UpdatedAt = DateTimeOffset.UtcNow;
+        _projectStore.Save(_project, _projectFilePath);
+
+        Canvas.RemoveMarker(taskId);
         TaskList.Refresh(_project.Tasks);
     }
 
