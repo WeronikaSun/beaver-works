@@ -566,14 +566,14 @@ a breaking format change, only new UI to populate them.
 
 #### Automated
 
-- [ ] 3.1 Build succeeds with 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
-- [ ] 3.2 Full solution test run passes: `dotnet test BeaverWorks.sln --no-build`
+- [x] 3.1 Build succeeds with 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
+- [x] 3.2 Full solution test run passes: `dotnet test BeaverWorks.sln --no-build`
 
 #### Manual
 
-- [ ] 3.3 Plan image renders letterboxed correctly for a non-matching aspect ratio
-- [ ] 3.4 Clicking inside the image opens the new-task dialog; clicking the letterbox margin does nothing
-- [ ] 3.5 Creating a task with only a title shows a Planned-colored marker at the exact clicked point
-- [ ] 3.6 Save/close/reopen reproduces the marker at the identical position
-- [ ] 3.7 Two tasks at distinct points both survive reopen at their distinct positions
-- [ ] 3.8 Markers track the image correctly after a window resize
+- [x] 3.3 Plan image renders letterboxed correctly for a non-matching aspect ratio
+- [x] 3.4 Clicking inside the image opens the new-task dialog; clicking the letterbox margin does nothing
+- [x] 3.5 Creating a task with only a title shows a Planned-colored marker at the exact clicked point
+- [x] 3.6 Save/close/reopen reproduces the marker at the identical position
+- [x] 3.7 Two tasks at distinct points both survive reopen at their distinct positions
+- [x] 3.8 Markers track the image correctly after a window resize

@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using BeaverWorks.Core.Models;
 using BeaverWorks.Core.Persistence;
 using BeaverWorks.Core.Services;
 using BeaverWorks.Desktop.ViewModels;
@@ -49,7 +50,7 @@ public partial class App : Application
     {
         var recentProjectsViewModel = new RecentProjectsViewModel(_userSession!.CurrentUsername!, _projectStore!, _recentProjectsStore!);
         recentProjectsViewModel.NewProjectRequested += (_, _) => ShowNewProjectDialog();
-        recentProjectsViewModel.ProjectOpened += (_, args) => ShowProjectPlaceholder(args);
+        recentProjectsViewModel.ProjectOpened += (_, args) => ShowPlanCanvas(args);
 
         _mainWindow!.Content = new RecentProjectsView { DataContext = recentProjectsViewModel };
     }
@@ -66,14 +67,25 @@ public partial class App : Application
 
         if (result == true && created is not null)
         {
-            ShowProjectPlaceholder(created);
+            ShowPlanCanvas(created);
         }
     }
 
-    private void ShowProjectPlaceholder(OpenedProjectEventArgs args)
+    private void ShowPlanCanvas(OpenedProjectEventArgs args)
     {
-        var viewModel = new ProjectPlaceholderViewModel(args.Project, args.FilePath);
-        _mainWindow!.Content = new ProjectPlaceholderView { DataContext = viewModel };
+        var canvasViewModel = new PlanCanvasViewModel(args.Project, args.FilePath, _projectStore!);
+        canvasViewModel.NewTaskRequested += (_, position) => ShowNewTaskDialog(canvasViewModel, position);
+
+        _mainWindow!.Content = new PlanCanvasView { DataContext = canvasViewModel };
+    }
+
+    private void ShowNewTaskDialog(PlanCanvasViewModel canvasViewModel, PlanPoint position)
+    {
+        var newTaskViewModel = new NewTaskViewModel(position);
+        newTaskViewModel.TaskCreated += (_, task) => canvasViewModel.AddTask(task);
+
+        var dialog = new NewTaskDialog(newTaskViewModel) { Owner = _mainWindow };
+        dialog.ShowDialog();
     }
 }
 
