@@ -15,6 +15,8 @@ public partial class App : Application
 {
     private AuthService? _authService;
     private UserSession? _userSession;
+    private IProjectStore? _projectStore;
+    private IRecentProjectsStore? _recentProjectsStore;
     private MainWindow? _mainWindow;
 
     protected override void OnStartup(StartupEventArgs e)
@@ -24,6 +26,8 @@ public partial class App : Application
         var credentialStore = new CredentialStore();
         _authService = new AuthService(credentialStore);
         _userSession = new UserSession();
+        _projectStore = new ProjectStore();
+        _recentProjectsStore = new RecentProjectsStore();
 
         _mainWindow = new MainWindow();
         MainWindow = _mainWindow;
@@ -43,8 +47,33 @@ public partial class App : Application
 
     private void ShowRecentProjects()
     {
-        var recentProjectsViewModel = new RecentProjectsViewModel();
+        var recentProjectsViewModel = new RecentProjectsViewModel(_userSession!.CurrentUsername!, _projectStore!, _recentProjectsStore!);
+        recentProjectsViewModel.NewProjectRequested += (_, _) => ShowNewProjectDialog();
+        recentProjectsViewModel.ProjectOpened += (_, args) => ShowProjectPlaceholder(args);
+
         _mainWindow!.Content = new RecentProjectsView { DataContext = recentProjectsViewModel };
+    }
+
+    private void ShowNewProjectDialog()
+    {
+        var newProjectViewModel = new NewProjectViewModel(_userSession!.CurrentUsername!, _projectStore!, _recentProjectsStore!);
+
+        OpenedProjectEventArgs? created = null;
+        newProjectViewModel.ProjectCreated += (_, args) => created = args;
+
+        var dialog = new NewProjectDialog(newProjectViewModel) { Owner = _mainWindow };
+        var result = dialog.ShowDialog();
+
+        if (result == true && created is not null)
+        {
+            ShowProjectPlaceholder(created);
+        }
+    }
+
+    private void ShowProjectPlaceholder(OpenedProjectEventArgs args)
+    {
+        var viewModel = new ProjectPlaceholderViewModel(args.Project, args.FilePath);
+        _mainWindow!.Content = new ProjectPlaceholderView { DataContext = viewModel };
     }
 }
 

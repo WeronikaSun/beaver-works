@@ -3,15 +3,64 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:BeaverWorks.Desktop.Views"
              xmlns:vm="clr-namespace:BeaverWorks.Desktop.ViewModels"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:RecentProjectsViewModel}"
              d:DesignWidth="400" d:DesignHeight="320">
-    <Grid>
-        <TextBlock Text="{Binding EmptyStateMessage}"
+    <UserControl.Resources>
+        <local:NullOrEmptyStringToVisibilityConverter x:Key="NullOrEmptyStringToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Projects" FontSize="20" FontWeight="Bold" Margin="0,0,0,12" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+            <Button Content="New project" Command="{Binding NewProjectCommand}" Padding="12,4" Margin="0,0,8,0" />
+            <Button Content="Open from disk..." Command="{Binding OpenFromDiskCommand}" Padding="12,4" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="2"
+                   Text="No projects yet."
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="16"
-                   Foreground="Gray" />
+                   Foreground="Gray"
+                   Visibility="{Binding IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <ListBox Grid.Row="2"
+                 x:Name="RecentProjectsList"
+                 ItemsSource="{Binding RecentProjects}"
+                 Visibility="{Binding HasRecentProjects, Converter={StaticResource BooleanToVisibilityConverter}}"
+                 BorderThickness="0"
+                 Background="Transparent">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Button Padding="8,6"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding DataContext.OpenProjectCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                            CommandParameter="{Binding}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                            <TextBlock Text="{Binding FilePath}" Foreground="Gray" FontSize="11" />
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock Grid.Row="3"
+                   Text="{Binding ErrorMessage}"
+                   Foreground="Red"
+                   TextWrapping="Wrap"
+                   Margin="0,12,0,0"
+                   Visibility="{Binding ErrorMessage, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}" />
     </Grid>
 </UserControl>
