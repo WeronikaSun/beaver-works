@@ -492,8 +492,8 @@ fields.
 
 #### Automated
 
-- [ ] 1.1 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
-- [ ] 1.2 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
+- [x] 1.1 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
+- [x] 1.2 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
 
 ### Phase 2: Workspace Shell, Task List Panel & Selection Sync
 

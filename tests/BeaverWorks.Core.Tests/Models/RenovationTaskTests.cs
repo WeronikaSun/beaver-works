@@ -18,4 +18,12 @@ public class RenovationTaskTests
         Assert.Equal(position.Y, task.Position.Y);
         Assert.NotEqual(Guid.Empty, task.Id);
     }
+
+    [Fact]
+    public void PriorityBounds_MinAndMaxMatchDeclaredOneToFiveScale()
+    {
+        Assert.Equal(1, RenovationTask.MinPriority);
+        Assert.Equal(5, RenovationTask.MaxPriority);
+        Assert.InRange(RenovationTask.DefaultPriority, RenovationTask.MinPriority, RenovationTask.MaxPriority);
+    }
 }

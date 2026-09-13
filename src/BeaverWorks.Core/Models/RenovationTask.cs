@@ -12,6 +12,12 @@ public sealed class RenovationTask
     /// neutral mid-value so unestimated tasks are neither favored nor penalized.</summary>
     public const int DefaultPriority = 3;
 
+    /// <summary>Lowest valid value on the priority scale.</summary>
+    public const int MinPriority = 1;
+
+    /// <summary>Highest valid value on the priority scale.</summary>
+    public const int MaxPriority = 5;
+
     public required Guid Id { get; init; }
 
     public required string Title { get; set; }
