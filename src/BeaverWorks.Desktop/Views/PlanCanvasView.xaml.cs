@@ -33,4 +33,14 @@ public partial class PlanCanvasView : UserControl
             viewModel.HandleClickCommand.Execute(position);
         }
     }
+
+    private void Marker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (DataContext is PlanCanvasViewModel viewModel
+            && sender is FrameworkElement { DataContext: TaskMarkerViewModel marker })
+        {
+            viewModel.NotifyMarkerClicked(marker.Task.Id);
+            e.Handled = true;
+        }
+    }
 }

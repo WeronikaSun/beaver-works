@@ -13,7 +13,8 @@
                Stretch="Uniform"
                MouseLeftButtonDown="PlanImage_MouseLeftButtonDown" />
 
-        <Canvas IsHitTestVisible="False">
+        <Canvas Background="Transparent"
+                MouseLeftButtonDown="PlanImage_MouseLeftButtonDown">
             <ItemsControl ItemsSource="{Binding Markers}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -30,10 +31,22 @@
                     <DataTemplate>
                         <Ellipse Width="14" Height="14"
                                  Fill="{Binding Brush}"
-                                 Stroke="White"
-                                 StrokeThickness="1.5"
                                  Margin="-7,-7,0,0"
-                                 ToolTip="{Binding Task.Title}" />
+                                 ToolTip="{Binding Task.Title}"
+                                 MouseLeftButtonDown="Marker_MouseLeftButtonDown">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Stroke" Value="White" />
+                                    <Setter Property="StrokeThickness" Value="1.5" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="Stroke" Value="Gold" />
+                                            <Setter Property="StrokeThickness" Value="3" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

@@ -492,24 +492,24 @@ fields.
 
 #### Automated
 
-- [x] 1.1 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
-- [x] 1.2 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
+- [x] 1.1 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj` — 2fe2b11
+- [x] 1.2 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore` — 2fe2b11
 
 ### Phase 2: Workspace Shell, Task List Panel & Selection Sync
 
 #### Automated
 
-- [ ] 2.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
-- [ ] 2.2 Core unit tests still pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
+- [x] 2.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
+- [x] 2.2 Core unit tests still pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
 
 #### Manual
 
-- [ ] 2.3 Opening a project shows the plan canvas with a task list panel docked beside it, listing every task
-- [ ] 2.4 Selecting a task in the list highlights its marker on the canvas
-- [ ] 2.5 Clicking an existing marker selects it in the list and shows its details
-- [ ] 2.6 Selecting a task shows all of its FR-007 fields in the detail readout
-- [ ] 2.7 Changing status via the list's quick dropdown recolors the marker immediately
-- [ ] 2.8 Creating a new task by clicking empty plan space still works exactly as before
+- [x] 2.3 Opening a project shows the plan canvas with a task list panel docked beside it, listing every task
+- [x] 2.4 Selecting a task in the list highlights its marker on the canvas
+- [x] 2.5 Clicking an existing marker selects it in the list and shows its details
+- [x] 2.6 Selecting a task shows all of its FR-007 fields in the detail readout
+- [x] 2.7 Changing status via the list's quick dropdown recolors the marker immediately
+- [x] 2.8 Creating a new task by clicking empty plan space still works exactly as before
 
 ### Phase 3: Edit Dialog, Dependency Picker & Delete Flow
 

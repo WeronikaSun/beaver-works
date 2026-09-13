@@ -73,16 +73,16 @@ public partial class App : Application
 
     private void ShowPlanCanvas(OpenedProjectEventArgs args)
     {
-        var canvasViewModel = new PlanCanvasViewModel(args.Project, args.FilePath, _projectStore!);
-        canvasViewModel.NewTaskRequested += (_, position) => ShowNewTaskDialog(canvasViewModel, position);
+        var workspaceViewModel = new ProjectWorkspaceViewModel(args.Project, args.FilePath, _projectStore!);
+        workspaceViewModel.NewTaskRequested += (_, position) => ShowNewTaskDialog(workspaceViewModel, position);
 
-        _mainWindow!.Content = new PlanCanvasView { DataContext = canvasViewModel };
+        _mainWindow!.Content = new ProjectWorkspaceView { DataContext = workspaceViewModel };
     }
 
-    private void ShowNewTaskDialog(PlanCanvasViewModel canvasViewModel, PlanPoint position)
+    private void ShowNewTaskDialog(ProjectWorkspaceViewModel workspaceViewModel, PlanPoint position)
     {
         var newTaskViewModel = new NewTaskViewModel(position);
-        newTaskViewModel.TaskCreated += (_, task) => canvasViewModel.AddTask(task);
+        newTaskViewModel.TaskCreated += (_, task) => workspaceViewModel.AddTask(task);
 
         var dialog = new NewTaskDialog(newTaskViewModel) { Owner = _mainWindow };
         dialog.ShowDialog();
