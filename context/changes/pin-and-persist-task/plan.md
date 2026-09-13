@@ -538,29 +538,29 @@ a breaking format change, only new UI to populate them.
 
 #### Automated
 
-- [x] 1.1 Build succeeds with 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
-- [x] 1.2 Unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
-- [x] 1.3 `packages.lock.json` unchanged for `BeaverWorks.Core`
+- [x] 1.1 Build succeeds with 0 warnings: `dotnet build BeaverWorks.sln --no-restore` — 15cea7b
+- [x] 1.2 Unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj` — 15cea7b
+- [x] 1.3 `packages.lock.json` unchanged for `BeaverWorks.Core` — 15cea7b
 
 #### Manual
 
-- [x] 1.4 A manually written `.bwproj` file shows the expected JSON shape with `Position` round-tripping unchanged (JSON shape confirmed; full `Position` round-trip re-verified manually via Phase 3's 3.6 once tasks can be pinned)
+- [x] 1.4 A manually written `.bwproj` file shows the expected JSON shape with `Position` round-tripping unchanged (JSON shape confirmed; full `Position` round-trip re-verified manually via Phase 3's 3.6 once tasks can be pinned) — 15cea7b
 
 ### Phase 2: Desktop Project Creation & Recent-Projects Wiring
 
 #### Automated
 
-- [x] 2.1 Build succeeds with 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
-- [x] 2.2 Full solution test run passes: `dotnet test BeaverWorks.sln --no-build`
+- [x] 2.1 Build succeeds with 0 warnings: `dotnet build BeaverWorks.sln --no-restore` — 15cea7b
+- [x] 2.2 Full solution test run passes: `dotnet test BeaverWorks.sln --no-build` — 15cea7b
 
 #### Manual
 
-- [x] 2.3 Zero-project empty state shows with working "New project" action
-- [x] 2.4 Creating a project with the built-in sample plan succeeds (file + copied image both exist)
-- [x] 2.5 Creating a project by importing a custom image copies the file (not just a path reference)
-- [x] 2.6 Duplicate project name shows an inline error and does not overwrite
-- [x] 2.7 Recent-projects list shows both projects after relaunch, most-recent first
-- [x] 2.8 Opening a project with a deleted plan image shows a clear error and does not corrupt the project file
+- [x] 2.3 Zero-project empty state shows with working "New project" action — 15cea7b
+- [x] 2.4 Creating a project with the built-in sample plan succeeds (file + copied image both exist) — 15cea7b
+- [x] 2.5 Creating a project by importing a custom image copies the file (not just a path reference) — 15cea7b
+- [x] 2.6 Duplicate project name shows an inline error and does not overwrite — 15cea7b
+- [x] 2.7 Recent-projects list shows both projects after relaunch, most-recent first — 15cea7b
+- [x] 2.8 Opening a project with a deleted plan image shows a clear error and does not corrupt the project file — 15cea7b
 
 ### Phase 3: Desktop Floor-Plan Canvas & Task Pinning
 
