@@ -515,14 +515,14 @@ fields.
 
 #### Automated
 
-- [x] 3.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore`
-- [x] 3.2 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj`
+- [x] 3.1 Build has 0 warnings: `dotnet build BeaverWorks.sln --no-restore` — 787fb50
+- [x] 3.2 Core unit tests pass: `dotnet test tests/BeaverWorks.Core.Tests/BeaverWorks.Core.Tests.csproj` — 787fb50
 
 #### Manual
 
-- [x] 3.3 Editing a task's full field set persists after save, close, and reopen
-- [x] 3.4 Changing status via the edit dialog recolors the marker immediately
-- [x] 3.5 A dependency selection that would create a cycle is rejected and not saved
-- [x] 3.6 Deleting a task that another task depends on is blocked with a message naming the blocking task(s)
-- [x] 3.7 Deleting a task with no dependents removes its marker and list row, surviving save/reopen
-- [x] 3.8 Canceling edit or declining delete confirmation leaves the task and project file unchanged
+- [x] 3.3 Editing a task's full field set persists after save, close, and reopen — 787fb50
+- [x] 3.4 Changing status via the edit dialog recolors the marker immediately — 787fb50
+- [x] 3.5 A dependency selection that would create a cycle is rejected and not saved — 787fb50
+- [x] 3.6 Deleting a task that another task depends on is blocked with a message naming the blocking task(s) — 787fb50
+- [x] 3.7 Deleting a task with no dependents removes its marker and list row, surviving save/reopen — 787fb50
+- [x] 3.8 Canceling edit or declining delete confirmation leaves the task and project file unchanged — 787fb50
