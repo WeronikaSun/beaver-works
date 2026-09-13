@@ -14,207 +14,203 @@ milestone_status: open
 
 # Roadmap: Beaver-Works
 
-> Wyprowadzone z `context/foundation/prd.md` (v1) + auto-zbadanego stanu bazowego kodu.
-> Edytuj w miejscu; archiwizuj przy zastąpieniu.
-> Poniższe fragmenty są ułożone w kolejności zależności. Tabela "W skrócie" to indeks.
+> Derived from `context/foundation/prd.md` (v1) + auto-investigated codebase baseline.
+> Edit in place; archive on replacement.
+> The items below are ordered by dependency. The "At a glance" table is the index.
 
-## Milestone (Kamień milowy)
+## Milestone
 
-**M-1: MVP — przypinanie zadań remontowych + rekomendacje wg budżetu** — Status: open
+**M-1: MVP — pin renovation tasks + budget-based recommendations** — Status: open
 
-- **Cel:** Dostarczyć kompletne, jednotygodniowe MVP opisane w PRD: użytkownik może zalogować się lokalnie, przypiąć zadania remontowe do planu mieszkania i nigdy ich nie stracić przy zapisie/ponownym otwarciu, zarządzać tymi zadaniami, zadeklarować budżet czasu/pieniędzy i otrzymać rekomendację, co zrobić dalej w ramach tego budżetu.
-- **Materiały źródłowe:** `context/foundation/prd.md` (v1)
-- **Gotowe, gdy:** każdy element F-NN i S-NN poniżej ma status `done`.
+- **Goal:** Deliver the complete, one-week MVP described in the PRD: the user can log in locally, pin renovation tasks to the floor plan and never lose them on save/reopen, manage those tasks, declare a time/money budget, and get a recommendation of what to do next within that budget.
+- **Source materials:** `context/foundation/prd.md` (v1)
+- **Done when:** every F-NN and S-NN item below has status `done`.
 
-## Streszczenie wizji
+## Vision summary
 
-Zwykła lista zadań remontowych traci kontekst przestrzenny — nie widać, gdzie
-w mieszkaniu dotyczy dane zadanie. Ta aplikacja przypina zadania remontowe
-bezpośrednio do obrazu planu mieszkania (np. "to gniazdko trzeba wymienić")
-zamiast prowadzić arkusz, dzięki czemu postęp i priorytet można śledzić
-pokój po pokoju. Wyróżnik produktu — cecha, bez której produkt niczym nie
-różniłby się od zwykłego to-do — to połączenie zadań przypiętych
-geometrycznie do planu Z deterministyczną regułą "co zrobić dalej", która
-pokazuje pracę faktycznie mieszczącą się w pozostałym budżecie czasu i
-pieniędzy użytkownika.
+An ordinary renovation task list loses spatial context — you can't see where
+in the apartment a given task applies. This app pins renovation tasks
+directly onto the floor-plan image (e.g. "this outlet needs replacing")
+instead of keeping a spreadsheet, so progress and priority can be tracked
+room by room. The product's differentiator — the feature without which the
+product would be indistinguishable from a plain to-do list — is the
+combination of tasks pinned geometrically to the plan with a deterministic
+"what to do next" rule that shows work that actually fits within the user's
+remaining time and money budget.
 
-## Gwiazda przewodnia
+## North star
 
-**S-01: Użytkownik może przypiąć zadanie remontowe do planu mieszkania i
-przetrwa ono zapis/ponowne otwarcie** — to dokładnie ten fragment, który
-Kryteria sukcesu (Primary) w PRD nazywają wprost: najmniejszy przepływ
-end-to-end, który dowodzi, że główna hipoteza produktu (zadania przypięte do
-planu + trwała geometria) faktycznie działa — dlatego jest sekwencjonowany
-jako pierwszy, mimo że zależy od fundamentu logowania.
+**S-01: The user can pin a renovation task to the floor plan and it survives
+save/reopen** — this is exactly the slice that the PRD's Success Criteria
+(Primary) name explicitly: the smallest end-to-end flow that proves the
+product's core hypothesis (tasks pinned to the plan + durable geometry)
+actually works — which is why it's sequenced first, even though it depends
+on the login foundation.
 
-> "Gwiazda przewodnia" oznacza tutaj: najmniejszy fragment end-to-end, którego
-> udane dostarczenie dowodzi, że główny pomysł działa — wszystko, co
-> następuje później, ma znaczenie tylko wtedy, gdy ten przepływ się utrzyma.
+> "North star" here means: the smallest end-to-end slice whose successful
+> delivery proves the core idea works — everything that follows only matters
+> if this flow holds up.
 
-## W skrócie
+## At a glance
 
-| ID | Change ID | Efekt (użytkownik może …) | Wymagania wstępne | Odwołania do PRD | Status |
+| ID | Change ID | Outcome (the user can …) | Prerequisites | PRD references | Status |
 | ---- | ------------------------- | ------------------------------------------------------------------------ | -------------- | ------------------------------------------- | -------- |
-| F-01 | local-auth-and-profiles | (fundament) lokalne logowanie + przechowywanie haseł jako soleny skrót gotowe | — | FR-001, Access Control | in-progress |
-| S-01 | pin-and-persist-task | przypiąć zadanie do planu mieszkania; przetrwa ono zapis, zamknięcie i ponowne otwarcie | F-01 | US-01, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-012 | proposed |
-| S-02 | manage-tasks | przeglądać, edytować (w tym status) i usuwać zadania z listy | F-01, S-01 | US-01, FR-009, FR-010, FR-011 | proposed |
-| S-03 | budget-based-recommendations | zadeklarować budżet czasu/pieniędzy i zobaczyć uporządkowaną wg priorytetu rekomendację mieszczącą się w budżecie | F-01, S-01, S-02 | US-02, FR-013, FR-014, FR-015, FR-016 | proposed |
+| F-01 | local-auth-and-profiles | (foundation) local login + password storage as a salted hash ready | — | FR-001, Access Control | done |
+| S-01 | pin-and-persist-task | pin a task to the floor plan; it survives save, close, and reopen | F-01 | US-01, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-012 | proposed |
+| S-02 | manage-tasks | view, edit (including status), and delete tasks from the list | F-01, S-01 | US-01, FR-009, FR-010, FR-011 | proposed |
+| S-03 | budget-based-recommendations | declare a time/money budget and see a priority-ordered recommendation that fits the budget | F-01, S-01, S-02 | US-02, FR-013, FR-014, FR-015, FR-016 | proposed |
 
-## Stan bazowy (Baseline)
+## Baseline
 
-Co już istnieje w kodzie na dzień `2026-09-13` (zbadane automatycznie i
-potwierdzone przez użytkownika). Fundamenty poniżej zakładają, że to jest
-obecne i NIE odtwarzają tego od nowa.
+What already exists in the code as of `2026-09-13` (auto-investigated and
+confirmed by the user). The foundations below assume this is present and do
+NOT rebuild it.
 
-- **Frontend:** brak — `MainWindow.xaml` to pusta powłoka; foldery
-  `Views/`/`ViewModels/` w `BeaverWorks.Desktop` są puste.
-- **Backend / API:** nie dotyczy — aplikacja desktopowa, brak warstwy serwera.
-- **Dane:** brak — foldery `Models/`/`Persistence/` w `BeaverWorks.Core` są
-  puste; istnieje tylko placeholder `Class1.cs`.
-- **Auth:** brak — brak ekranu logowania, brak przechowywania poświadczeń;
-  `tech-stack.md` deklaruje zamiar (`has_auth: true`), ale nic nie jest
-  zaimplementowane.
-- **Deploy / infra:** brak, świadomie poza zakresem na razie (brak CI/CD wg
-  konwencji repo).
-- **Observability:** brak — brak logowania/śledzenia błędów.
+- **Frontend:** none — `MainWindow.xaml` is an empty shell; the
+  `Views/`/`ViewModels/` folders in `BeaverWorks.Desktop` are empty.
+- **Backend / API:** n/a — desktop application, no server layer.
+- **Data:** none — the `Models/`/`Persistence/` folders in `BeaverWorks.Core`
+  are empty; only a placeholder `Class1.cs` exists.
+- **Auth:** none — no login screen, no credential storage;
+  `tech-stack.md` declares intent (`has_auth: true`), but nothing is
+  implemented.
+- **Deploy / infra:** none, deliberately out of scope for now (no CI/CD per
+  repo convention).
+- **Observability:** none — no logging/error tracking.
 
-## Fundamenty
+## Foundations
 
-### F-01: Fundament lokalnego logowania i profilu
+### F-01: Local login and profile foundation
 
-- **Efekt:** (fundament) istnieje lokalny ekran logowania, hasła są
-  przechowywane jako solony skrót poza plikiem projektu, a zalogowany
-  użytkownik trafia na (ewentualnie pustą) listę ostatnich projektów.
+- **Outcome:** (foundation) a local login screen exists, passwords are
+  stored as a salted hash outside the project file, and a logged-in
+  user lands on an (optionally empty) list of recent projects.
 - **Change ID:** local-auth-and-profiles
-- **Odwołania do PRD:** FR-001, sekcja Access Control
-- **Odblokowuje:** S-01, S-02, S-03 (każdy kolejny fragment zakłada
-  zalogowanego użytkownika z własnym zbiorem projektów); spełnia guardrail
-  "hasła nigdy nie są przechowywane jawnym tekstem".
-- **Wymagania wstępne:** —
-- **Równolegle z:** —
-- **Blokery:** —
-- **Niewiadome:** —
-- **Ryzyko:** Wyłącznie lokalne logowanie dodaje niewielkie tarcie dla
-  jednoosobowej aplikacji desktopowej, ale FR-001 i sekcja Access Control
-  wymagają tego wprost; celowo utrzymane minimalnie (model płaski, brak
-  ról, standardowy platformowy solony skrót), aby chronić tygodniowy
+- **PRD references:** FR-001, Access Control section
+- **Unlocks:** S-01, S-02, S-03 (every subsequent slice assumes a
+  logged-in user with their own set of projects); satisfies the guardrail
+  "passwords are never stored in plaintext".
+- **Prerequisites:** —
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Local-only login adds a small amount of friction for a
+  single-user desktop app, but FR-001 and the Access Control section
+  require it explicitly; deliberately kept minimal (flat model, no
+  roles, standard platform salted hash) to protect the one-week
   deadline.
-- **Status:** in-progress
+- **Status:** done
 
-## Fragmenty (Slices)
+## Slices
 
-### S-01: Przypnij i zachowaj zadanie remontowe
+### S-01: Pin and persist a renovation task
 
-- **Efekt:** użytkownik może utworzyć projekt, zobaczyć plan mieszkania
-  (wbudowany przykład lub własny plik), kliknąć miejsce na planie, aby
-  utworzyć zadanie z tytułem i domyślnie kolorowanym markerem, a po
-  zapisaniu i ponownym otwarciu projektu zadanie oraz dokładna pozycja
-  markera pozostają niezmienione.
+- **Outcome:** the user can create a project, see the floor plan
+  (a built-in sample or their own file), click a location on the plan to
+  create a task with a title and a default-colored marker, and after
+  saving and reopening the project the task and the exact marker
+  position remain unchanged.
 - **Change ID:** pin-and-persist-task
-- **Odwołania do PRD:** US-01, FR-002, FR-003, FR-004, FR-005, FR-006,
+- **PRD references:** US-01, FR-002, FR-003, FR-004, FR-005, FR-006,
   FR-007, FR-008, FR-012
-- **Wymagania wstępne:** F-01
-- **Równolegle z:** —
-- **Blokery:** —
-- **Niewiadome:** —
-- **Ryzyko:** To jest kluczowy fragment gwiazdy przewodniej — wszystko
-  inne traci sens, jeśli przepływ kliknięcie → marker → zapis → odczyt nie
-  zachowa geometrii dokładnie; sekwencjonowany zaraz po logowaniu, aby
-  udowodnić główną hipotezę, zanim powstanie dalszy zakres.
+- **Prerequisites:** F-01
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** This is the key slice of the north star — everything else
+  loses meaning if the click → marker → save → read flow doesn't
+  preserve geometry exactly; sequenced right after login to prove the
+  core hypothesis before further scope is built.
 - **Status:** proposed
 
-### S-02: Zarządzaj zadaniami
+### S-02: Manage tasks
 
-- **Efekt:** użytkownik może zobaczyć listę zadań i szczegóły wybranego
-  zadania, edytować zadanie (w tym zmieniać status, co natychmiast
-  aktualizuje kolor markera) oraz usunąć zadanie.
+- **Outcome:** the user can see the task list and the details of a
+  selected task, edit a task (including changing its status, which
+  immediately updates the marker color), and delete a task.
 - **Change ID:** manage-tasks
-- **Odwołania do PRD:** US-01, FR-009, FR-010, FR-011
-- **Wymagania wstępne:** F-01, S-01
-- **Równolegle z:** —
-- **Blokery:** —
-- **Niewiadome:** —
-- **Ryzyko:** Wydzielenie zarządzania (lista/edycja/usuwanie/status) z S-01
-  utrzymuje fragment gwiazdy przewodniej w rozmiarze możliwym do
-  zaplanowania w jednym przebiegu `/10x-plan`, jednocześnie pokrywając
-  FR-009/010/011 jako spójny, widoczny dla użytkownika efekt.
+- **PRD references:** US-01, FR-009, FR-010, FR-011
+- **Prerequisites:** F-01, S-01
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Splitting management (list/edit/delete/status) out of S-01
+  keeps the north-star slice small enough to plan in a single
+  `/10x-plan` pass, while still covering FR-009/010/011 as one coherent,
+  user-visible outcome.
 - **Status:** proposed
 
-### S-03: Rekomendacje zadań wg budżetu
+### S-03: Budget-based task recommendations
 
-- **Efekt:** użytkownik może zadeklarować w profilu tygodniowy budżet
-  czasu i miesięczny budżet pieniędzy, otworzyć widok rekomendacji
-  pokazujący uporządkowaną wg priorytetu listę zadań mieszczących się w
-  pozostałym budżecie (z wykluczeniem zadań ukończonych/aktywnych/
-  zablokowanych/z niespełnionymi zależnościami) wraz z krótkim
-  uzasadnieniem, oraz zobaczyć, że budżety zmniejszają się po ukończeniu
-  zadania i resetują się automatycznie na początku kolejnego okresu
-  kalendarzowego.
+- **Outcome:** the user can declare a weekly time budget and a monthly
+  money budget in their profile, open a recommendations view showing a
+  priority-ordered list of tasks that fit within the remaining budget
+  (excluding done/active/blocked tasks or tasks with unmet
+  dependencies) along with a short rationale, and see that budgets
+  decrease as tasks are completed and reset automatically at the start
+  of the next calendar period.
 - **Change ID:** budget-based-recommendations
-- **Odwołania do PRD:** US-02, FR-013, FR-014, FR-015, FR-016
-- **Wymagania wstępne:** F-01, S-01, S-02
-- **Równolegle z:** —
-- **Blokery:** —
-- **Niewiadome:** —
-- **Ryzyko:** Reguła rekomendacji potrzebuje ręcznie ustawianego statusu
-  Blocked oraz zależności między zadaniami, które istnieją dopiero po
-  wdrożeniu edycji z S-02; sekwencjonowanie na końcu unika budowania
-  matematyki budżetu na danych wejściowych, których jeszcze nie ma.
+- **PRD references:** US-02, FR-013, FR-014, FR-015, FR-016
+- **Prerequisites:** F-01, S-01, S-02
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** The recommendation rule needs manually-settable Blocked
+  status and dependencies between tasks, which only exist once S-02's
+  editing is in place; sequencing it last avoids building budget math on
+  inputs that don't exist yet.
 - **Status:** proposed
 
-## Przekazanie do backlogu
+## Backlog hand-off
 
-| ID Roadmapy | Change ID | Proponowany tytuł zgłoszenia | Gotowe do `/10x-plan` | Uwagi |
+| Roadmap ID | Change ID | Suggested ticket title | Ready for `/10x-plan` | Notes |
 | ----------- | ------------------------- | -------------------------------------------------------------- | ---------------------- | --------------------------- |
-| F-01 | local-auth-and-profiles | Lokalne logowanie + przechowywanie haseł jako solony skrót | tak | Uruchom `/10x-plan local-auth-and-profiles` |
-| S-01 | pin-and-persist-task | Przypnij zadanie do planu i zachowaj je po zapisie/odczycie | nie | Zablokowane przez F-01 |
-| S-02 | manage-tasks | Lista zadań, edycja, zmiana statusu, usuwanie | nie | Zablokowane przez F-01, S-01 |
-| S-03 | budget-based-recommendations | Rekomendacje zadań mieszczące się w budżecie z uzasadnieniem | nie | Zablokowane przez F-01, S-01, S-02 |
+| F-01 | local-auth-and-profiles | Local login + password storage as a salted hash | yes | Run `/10x-plan local-auth-and-profiles` |
+| S-01 | pin-and-persist-task | Pin a task to the plan and persist it across save/reload | no | Blocked by F-01 |
+| S-02 | manage-tasks | Task list, editing, status changes, deletion | no | Blocked by F-01, S-01 |
+| S-03 | budget-based-recommendations | Budget-fitting task recommendations with rationale | no | Blocked by F-01, S-01, S-02 |
 
-## Otwarte pytania roadmapy
+## Open roadmap questions
 
-_Brak — sekcja `## Open Questions` w PRD nie zgłasza żadnych blokujących
-otwartych pytań (cross-check zamykający shape-notes zaakceptowany bez luk)._
+_None — the `## Open Questions` section in the PRD does not raise any
+blocking open questions (the closing quality cross-check on shape-notes was
+accepted with no gaps found)._
 
-## Odłożone (Parked)
+## Parked
 
-- **Pomieszczenia jako poligony** — Dlaczego odłożone: PRD §Non-Goals; MVP
-  nie modeluje pomieszczeń jako geometrii poligonowej.
-- **Automatyczne przypisanie zadania do pomieszczenia (point-in-polygon)** —
-  Dlaczego odłożone: PRD §Non-Goals; wymaga poligonów pomieszczeń, których
-  nie ma w MVP.
-- **Kolorowanie pomieszczeń wg postępu remontu** — Dlaczego odłożone: PRD
-  §Non-Goals; zależne od poligonów pomieszczeń.
-- **Linie instalacji (elektryczna/hydrauliczna/internetowa)** — Dlaczego
-  odłożone: PRD §Non-Goals; geometria LineString odłożona, niepotrzebna do
-  udowodnienia wartości MVP.
-- **Import/eksport w ustandaryzowanym formacie geoprzestrzennym** —
-  Dlaczego odłożone: PRD §Non-Goals; MVP przechowuje dane wewnętrznie we
-  własnym formacie projektu.
-- **Zoom/pan/dopasowanie widoku planu** — Dlaczego odłożone: PRD
-  §Non-Goals; MVP zakłada stały widok planu.
-- **Alternatywny renderer mapowy** — Dlaczego odłożone: PRD §Non-Goals; w
-  MVP działa wyłącznie natywny renderer wybranego stosu UI.
-- **Zewnętrzne repozytorium danych lub synchronizacja chmurowa** —
-  Dlaczego odłożone: PRD §Non-Goals; MVP zapisuje projekt wyłącznie jako
-  pojedynczy plik lokalny.
-- **Wielu użytkowników pracujących nad jednym projektem** — Dlaczego
-  odłożone: PRD §Non-Goals; jeden użytkownik, jedno urządzenie na sesję.
-- **Priorytety przypisane do pomieszczeń** — Dlaczego odłożone: PRD
-  §Non-Goals; niepotrzebne, aby reguła rekomendacji działała w MVP.
-- **Rysowanie planu wewnątrz aplikacji** — Dlaczego odłożone: PRD
-  §Non-Goals; użytkownik przygotowuje i importuje plan poza aplikacją.
-- **"Idealny/nieidealny" termin jako tie-breaker w rekomendacjach** —
-  Dlaczego odłożone: PRD §Non-Goals; MVP sortuje wyłącznie wg priorytetu w
-  ramach budżetu.
-- **Pełna odporność zapisu na awarie (zapis atomowy + kopia zapasowa)** —
-  Dlaczego odłożone: PRD §Non-Goals; MVP używa prostego nadpisu pliku;
-  pełna odporność to kolejny etap.
+- **Rooms as polygons** — Why parked: PRD §Non-Goals; the MVP does not
+  model rooms as polygon geometry.
+- **Automatic task-to-room assignment (point-in-polygon)** — Why parked:
+  PRD §Non-Goals; requires room polygons, which don't exist in the MVP.
+- **Coloring rooms by renovation progress** — Why parked: PRD §Non-Goals;
+  depends on room polygons.
+- **Utility lines (electrical/plumbing/internet)** — Why parked: PRD
+  §Non-Goals; LineString geometry parked, not needed to prove MVP value.
+- **Import/export in a standardized geospatial format** — Why parked: PRD
+  §Non-Goals; the MVP stores data internally in its own project format.
+- **Zoom/pan/fit-to-view for the plan** — Why parked: PRD §Non-Goals; the
+  MVP assumes a fixed plan view.
+- **Alternative map renderer** — Why parked: PRD §Non-Goals; the MVP uses
+  only the native renderer of the chosen UI stack.
+- **External data repository or cloud sync** — Why parked: PRD
+  §Non-Goals; the MVP saves the project only as a single local file.
+- **Multiple users working on one project** — Why parked: PRD
+  §Non-Goals; no real-time sharing/collaboration on the same project
+  file; one user, one device per session.
+- **Priorities assigned to rooms** — Why parked: PRD §Non-Goals; not
+  needed for the recommendation rule to work in the MVP.
+- **Drawing the plan inside the app** — Why parked: PRD §Non-Goals; the
+  user prepares and imports the plan outside the app.
+- **"Ideal/non-ideal" timing as a recommendation tie-breaker** — Why
+  parked: PRD §Non-Goals; the MVP sorts only by priority within budget.
+- **Full save resilience (atomic write + backup)** — Why parked: PRD
+  §Non-Goals; the MVP uses a simple file overwrite; full resilience is a
+  later stage.
 
-## Historia kamieni milowych
+## Milestone history
 
-_(puste — to pierwszy kamień milowy)_
+_(empty — this is the first milestone)_
 
-## Zrobione
+## Done
 
-_(puste — nic jeszcze nie zostało zarchiwizowane)_
+- **F-01: (foundation) local login + password storage as a salted hash ready** — Archived 2026-09-13 → `context/archive/2026-09-13-local-auth-and-profiles/`. Lesson: —.
