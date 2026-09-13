@@ -57,7 +57,7 @@ on the login foundation.
 | ---- | ------------------------- | ------------------------------------------------------------------------ | -------------- | ------------------------------------------- | -------- |
 | F-01 | local-auth-and-profiles | (foundation) local login + password storage as a salted hash ready | — | FR-001, Access Control | done |
 | S-01 | pin-and-persist-task | pin a task to the floor plan; it survives save, close, and reopen | F-01 | US-01, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-012 | done |
-| S-02 | manage-tasks | view, edit (including status), and delete tasks from the list | F-01, S-01 | US-01, FR-009, FR-010, FR-011 | proposed |
+| S-02 | manage-tasks | view, edit (including status), and delete tasks from the list | F-01, S-01 | US-01, FR-009, FR-010, FR-011 | planning |
 | S-03 | budget-based-recommendations | declare a time/money budget and see a priority-ordered recommendation that fits the budget | F-01, S-01, S-02 | US-02, FR-013, FR-014, FR-015, FR-016 | proposed |
 
 ## Baseline
@@ -138,7 +138,7 @@ NOT rebuild it.
   keeps the north-star slice small enough to plan in a single
   `/10x-plan` pass, while still covering FR-009/010/011 as one coherent,
   user-visible outcome.
-- **Status:** proposed
+- **Status:** planning
 
 ### S-03: Budget-based task recommendations
 
