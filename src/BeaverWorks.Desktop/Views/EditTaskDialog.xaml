@@ -55,7 +55,7 @@
 
             <TextBlock Grid.Row="6" Text="Priority (1-5)" Margin="0,0,0,4" />
             <TextBox Grid.Row="7"
-                     Text="{Binding Priority, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Priority, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
                      Margin="0,0,0,12" />
 
             <TextBlock Grid.Row="8" Text="Estimated cost / time (hours) / room" Margin="0,0,0,4" />
@@ -67,8 +67,8 @@
                     <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Text="{Binding EstimatedCost, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox Grid.Column="2" Text="{Binding EstimatedTimeHours, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Column="0" Text="{Binding EstimatedCost, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                <TextBox Grid.Column="2" Text="{Binding EstimatedTimeHours, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
                 <TextBox Grid.Column="4" Text="{Binding RoomId, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
 

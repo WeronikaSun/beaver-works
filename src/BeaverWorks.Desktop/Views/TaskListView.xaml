@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:BeaverWorks.Desktop.ViewModels"
+             xmlns:local="clr-namespace:BeaverWorks.Desktop.Views"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:TaskListViewModel}"
              d:DesignWidth="280" d:DesignHeight="480">
+    <UserControl.Resources>
+        <local:TaskStatusToBrushConverter x:Key="TaskStatusToBrushConverter" />
+        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </UserControl.Resources>
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,12 +25,22 @@
         <ListBox Grid.Row="1"
                   x:Name="TasksListBox"
                   ItemsSource="{Binding Tasks}"
-                  SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
-                  DisplayMemberPath="Title" />
+                  SelectedItem="{Binding SelectedTask, Mode=TwoWay}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="10" Height="10" Margin="0,0,6,0"
+                                 Fill="{Binding Status, Converter={StaticResource TaskStatusToBrushConverter}}" />
+                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <TextBlock Grid.Row="2" Text="Details" FontWeight="Bold" Margin="0,12,0,4" />
 
-        <StackPanel Grid.Row="3" Orientation="Vertical">
+        <StackPanel Grid.Row="3" Orientation="Vertical"
+                    Visibility="{Binding SelectedTask, Converter={StaticResource NullToVisibilityConverter}}">
             <TextBlock Text="{Binding SelectedTask.Title}" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,4" />
             <TextBlock Text="{Binding SelectedTask.Description}" TextWrapping="Wrap" Margin="0,0,0,8" />
 

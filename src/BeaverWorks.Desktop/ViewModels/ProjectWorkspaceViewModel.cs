@@ -1,3 +1,4 @@
+using System.IO;
 using BeaverWorks.Core.Models;
 using BeaverWorks.Core.Persistence;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,10 +32,11 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
     public event EventHandler<PlanPoint>? NewTaskRequested;
 
     /// <summary>
-    /// Raised when a delete was blocked because other tasks depend on the
-    /// target, naming the blocking task titles for display in a message box.
+    /// Raised when persisting a mutation to disk fails; the in-memory
+    /// project has already been rolled back to its prior state by the time
+    /// this fires, so the UI stays consistent with what's on disk.
     /// </summary>
-    public event EventHandler<string>? DeleteBlocked;
+    public event EventHandler<string>? SaveFailed;
 
     public ProjectWorkspaceViewModel(Project project, string projectFilePath, IProjectStore projectStore)
     {
@@ -59,7 +61,12 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
     {
         _project.Tasks.Add(task);
         _project.UpdatedAt = DateTimeOffset.UtcNow;
-        _projectStore.Save(_project, _projectFilePath);
+
+        if (!TrySave())
+        {
+            _project.Tasks.Remove(task);
+            return;
+        }
 
         Canvas.AddMarker(task);
         TaskList.Refresh(_project.Tasks);
@@ -78,9 +85,15 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
             return;
         }
 
+        var previous = _project.Tasks[index];
         _project.Tasks[index] = task;
         _project.UpdatedAt = DateTimeOffset.UtcNow;
-        _projectStore.Save(_project, _projectFilePath);
+
+        if (!TrySave())
+        {
+            _project.Tasks[index] = previous;
+            return;
+        }
 
         Canvas.UpdateMarker(task);
         TaskList.Refresh(_project.Tasks);
@@ -88,31 +101,57 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
 
     /// <summary>
     /// Removes a task from the project, unless another task still depends
-    /// on it — in which case the delete is blocked and
-    /// <see cref="DeleteBlocked"/> is raised naming the blocking task(s),
-    /// leaving the project untouched.
+    /// on it — in which case the delete is silently ignored, leaving the
+    /// project untouched. Callers are expected to pre-check
+    /// <see cref="Project.GetDependents"/> and confirm with the user before
+    /// calling this method (see <c>App.xaml.cs</c>'s delete flow); this
+    /// check is only a defensive fallback for future direct callers.
     /// </summary>
     public void DeleteTask(Guid taskId)
     {
         var dependents = _project.GetDependents(taskId);
         if (dependents.Count > 0)
         {
-            var names = string.Join(", ", dependents.Select(t => t.Title));
-            DeleteBlocked?.Invoke(this, names);
             return;
         }
 
-        var removed = _project.Tasks.RemoveAll(t => t.Id == taskId) > 0;
-        if (!removed)
+        var index = _project.Tasks.FindIndex(t => t.Id == taskId);
+        if (index < 0)
         {
             return;
         }
 
+        var removedTask = _project.Tasks[index];
+        _project.Tasks.RemoveAt(index);
         _project.UpdatedAt = DateTimeOffset.UtcNow;
-        _projectStore.Save(_project, _projectFilePath);
+
+        if (!TrySave())
+        {
+            _project.Tasks.Insert(index, removedTask);
+            return;
+        }
 
         Canvas.RemoveMarker(taskId);
         TaskList.Refresh(_project.Tasks);
+    }
+
+    /// <summary>
+    /// Persists the project to disk, reporting failure via
+    /// <see cref="SaveFailed"/> instead of letting the exception propagate
+    /// into a WPF command/event handler with an unmutated-looking UI.
+    /// </summary>
+    private bool TrySave()
+    {
+        try
+        {
+            _projectStore.Save(_project, _projectFilePath);
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            SaveFailed?.Invoke(this, ex.Message);
+            return false;
+        }
     }
 
     private void UpdateTaskStatus(Guid taskId, RenovationTaskStatus newStatus)

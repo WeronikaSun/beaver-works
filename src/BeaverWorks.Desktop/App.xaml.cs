@@ -77,12 +77,12 @@ public partial class App : Application
         workspaceViewModel.NewTaskRequested += (_, position) => ShowNewTaskDialog(workspaceViewModel, position);
         workspaceViewModel.TaskList.EditRequested += (_, taskId) => ShowEditTaskDialog(workspaceViewModel, taskId);
         workspaceViewModel.TaskList.DeleteRequested += (_, taskId) => ConfirmAndDeleteTask(workspaceViewModel, taskId);
-        workspaceViewModel.DeleteBlocked += (_, blockingTaskNames) => MessageBox.Show(
+        workspaceViewModel.SaveFailed += (_, message) => MessageBox.Show(
             _mainWindow,
-            $"This task can't be deleted because the following task(s) depend on it: {blockingTaskNames}",
-            "Delete blocked",
+            $"The change couldn't be saved and was reverted: {message}",
+            "Save failed",
             MessageBoxButton.OK,
-            MessageBoxImage.Warning);
+            MessageBoxImage.Error);
 
         _mainWindow!.Content = new ProjectWorkspaceView { DataContext = workspaceViewModel };
     }

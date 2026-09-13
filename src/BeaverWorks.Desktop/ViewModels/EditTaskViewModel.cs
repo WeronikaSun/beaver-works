@@ -39,6 +39,14 @@ public partial class TaskDependencyOption : ObservableObject
 /// </summary>
 public partial class EditTaskViewModel : ObservableObject
 {
+    /// <summary>
+    /// Upper bound for <see cref="EstimatedTimeHours"/> so a very large
+    /// value can't overflow <see cref="TimeSpan"/> when converted on save.
+    /// ~100,000 hours (over 11 years) comfortably covers any real
+    /// renovation estimate while staying well under <see cref="TimeSpan.MaxValue"/>.
+    /// </summary>
+    private const decimal MaxEstimatedTimeHours = 100_000m;
+
     private readonly RenovationTask _task;
     private readonly Project _project;
 
@@ -125,11 +133,28 @@ public partial class EditTaskViewModel : ObservableObject
             return;
         }
 
+        if (EstimatedTimeHours > MaxEstimatedTimeHours)
+        {
+            ErrorMessage = $"Estimated time is too large (max {MaxEstimatedTimeHours:N0} hours).";
+            return;
+        }
+
         var selectedDependencyIds = DependencyOptions.Where(o => o.IsSelected).Select(o => o.Id).ToList();
 
         if (TaskDependencyValidator.WouldCreateCycle(_project, _task.Id, selectedDependencyIds))
         {
             ErrorMessage = "This dependency selection would create a cycle.";
+            return;
+        }
+
+        TimeSpan? estimatedTime;
+        try
+        {
+            estimatedTime = EstimatedTimeHours is { } hours ? TimeSpan.FromHours((double)hours) : null;
+        }
+        catch (OverflowException)
+        {
+            ErrorMessage = "Estimated time is out of range.";
             return;
         }
 
@@ -141,7 +166,7 @@ public partial class EditTaskViewModel : ObservableObject
             Status = Status,
             Priority = Priority,
             EstimatedCost = EstimatedCost,
-            EstimatedTime = EstimatedTimeHours is { } hours ? TimeSpan.FromHours((double)hours) : null,
+            EstimatedTime = estimatedTime,
             RoomId = string.IsNullOrWhiteSpace(RoomId) ? null : RoomId,
             Position = _task.Position,
             DependsOnTaskIds = selectedDependencyIds,
