@@ -39,4 +39,4 @@ Beaver-Works is a solo-authored Windows desktop app (C#/WPF, MVVM) for planning 
 
 ## Commit & Pull Request Guidelines
 
-- No git history exists yet — commit convention is undefined; adopt Conventional Commits (`feat:`, `fix:`, `chore:`) and record the decision here once one is chosen.
+- Use Conventional Commits for commit messages (`feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:`).
