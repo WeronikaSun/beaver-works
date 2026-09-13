@@ -56,7 +56,7 @@ on the login foundation.
 | ID | Change ID | Outcome (the user can …) | Prerequisites | PRD references | Status |
 | ---- | ------------------------- | ------------------------------------------------------------------------ | -------------- | ------------------------------------------- | -------- |
 | F-01 | local-auth-and-profiles | (foundation) local login + password storage as a salted hash ready | — | FR-001, Access Control | done |
-| S-01 | pin-and-persist-task | pin a task to the floor plan; it survives save, close, and reopen | F-01 | US-01, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-012 | in-progress |
+| S-01 | pin-and-persist-task | pin a task to the floor plan; it survives save, close, and reopen | F-01 | US-01, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-012 | done |
 | S-02 | manage-tasks | view, edit (including status), and delete tasks from the list | F-01, S-01 | US-01, FR-009, FR-010, FR-011 | proposed |
 | S-03 | budget-based-recommendations | declare a time/money budget and see a priority-ordered recommendation that fits the budget | F-01, S-01, S-02 | US-02, FR-013, FR-014, FR-015, FR-016 | proposed |
 
@@ -121,7 +121,7 @@ NOT rebuild it.
   loses meaning if the click → marker → save → read flow doesn't
   preserve geometry exactly; sequenced right after login to prove the
   core hypothesis before further scope is built.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-02: Manage tasks
 
@@ -214,3 +214,4 @@ _(empty — this is the first milestone)_
 ## Done
 
 - **F-01: (foundation) local login + password storage as a salted hash ready** — Archived 2026-09-13 → `context/archive/2026-09-13-local-auth-and-profiles/`. Lesson: —.
+- **S-01: pin a task to the floor plan; it survives save, close, and reopen** — Archived 2026-09-13 → `context/archive/2026-09-13-pin-and-persist-task/`. Lesson: —.
