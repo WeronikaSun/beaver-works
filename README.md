@@ -2,6 +2,14 @@
 
 Desktopowa aplikacja C#/WPF do planowania remontu na planie mieszkania.
 
+## Główna funkcjonalność
+
+Główny widok aplikacji łączy plan mieszkania z interaktywnymi markerami zadań remontowych. Zadania są powiązane z konkretnymi miejscami na planie, a aplikacja uwzględnia ich priorytety, zależności oraz status realizacji.
+
+Na tej podstawie aplikacja pomaga określić kolejność prac, wskazuje zadania możliwe do wykonania w danym momencie oraz blokuje lub odsuwa te, które zależą od wcześniejszych etapów. Mechanizm rekomendacji dodatkowo uwzględnia dostępny budżet czasu i kosztów, proponując kolejne zadania do realizacji.
+
+![Widok planu mieszkania z przypiętymi zadaniami remontowymi](src/BeaverWorks.Desktop/Assets/MainFeature2.png)
+
 ## Wymagania
 
 - Windows
@@ -30,8 +38,6 @@ dotnet run --project src/BeaverWorks.Desktop/BeaverWorks.Desktop.csproj --no-bui
 W Visual Studio otwórz BeaverWorks.sln i ustaw BeaverWorks.Desktop jako projekt startowy.
 
 ## Aktualny stan
-
-Aplikacja jest funkcjonalna — to już nie jest puste okno WPF.
 
 - **Konto lokalne**: rejestracja i logowanie z lokalnym przechowywaniem
   poświadczeń (hasło hashowane z solą).
