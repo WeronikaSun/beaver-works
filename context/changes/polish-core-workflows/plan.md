@@ -400,10 +400,10 @@ No schema changes: `RenovationTask.Status`/`DependsOnTaskIds` and `UserBudgetPro
 
 #### Automated
 
-- [x] 5.1 Build succeeds with 0 warnings
+- [x] 5.1 Build succeeds with 0 warnings — 083be05
 
 #### Manual
 
-- [x] 5.2 Register with both budget fields filled with positive values; confirm success and that Budget Settings shows the same values afterward
-- [x] 5.3 Attempt registration with blank/zero/negative budget fields; confirm it's blocked with an error message
-- [x] 5.4 Confirm budget fields are hidden/not required in "Log in" mode
+- [x] 5.2 Register with both budget fields filled with positive values; confirm success and that Budget Settings shows the same values afterward — 083be05
+- [x] 5.3 Attempt registration with blank/zero/negative budget fields; confirm it's blocked with an error message — 083be05
+- [x] 5.4 Confirm budget fields are hidden/not required in "Log in" mode — 083be05
