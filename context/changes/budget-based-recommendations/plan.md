@@ -423,8 +423,8 @@ migration step is needed for existing users.
 
 #### Automated
 
-- [x] 1.1 Build succeeds with 0 warnings
-- [x] 1.2 Core unit tests pass (BudgetPeriodCalculator, UserBudgetProfileStore, EstimatePlaceholderCalculator)
+- [x] 1.1 Build succeeds with 0 warnings — 1e6a536
+- [x] 1.2 Core unit tests pass (BudgetPeriodCalculator, UserBudgetProfileStore, EstimatePlaceholderCalculator) — 1e6a536
 
 #### Manual
 
@@ -435,8 +435,8 @@ migration step is needed for existing users.
 
 #### Automated
 
-- [ ] 2.1 Build succeeds with 0 warnings
-- [ ] 2.2 Core unit tests pass (TaskRecommendationEngine, BudgetConsumptionService)
+- [x] 2.1 Build succeeds with 0 warnings
+- [x] 2.2 Core unit tests pass (TaskRecommendationEngine, BudgetConsumptionService)
 
 #### Manual
 
