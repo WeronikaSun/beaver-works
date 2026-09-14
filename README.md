@@ -31,9 +31,30 @@ W Visual Studio otwórz BeaverWorks.sln i ustaw BeaverWorks.Desktop jako projekt
 
 ## Aktualny stan
 
-Gotowy szkielet: cztery projekty, referencje, CommunityToolkit.Mvvm 8.4.0 i FlaUI.UIA3 5.0.0.
-Aplikacja wyświetla puste okno. Dwa testy szablonowe sprawdzają wyłącznie konfigurację uruchamiania testów.
-Funkcje produktu i rzeczywiste testy nie są jeszcze zaimplementowane.
+Aplikacja jest funkcjonalna — to już nie jest puste okno WPF.
+
+- **Konto lokalne**: rejestracja i logowanie z lokalnym przechowywaniem
+  poświadczeń (hasło hashowane z solą).
+- **Ostatnie projekty**: lista ostatnio otwieranych projektów do szybkiego
+  wznowienia pracy.
+- **Projekty remontowe**: tworzenie nowego projektu (z planem mieszkania w
+  formie obrazu) oraz otwieranie istniejącego.
+- **Zadania na planie**: przypinanie zadań remontowych do konkretnych miejsc
+  na planie, z markerem na canvasie.
+- **Zarządzanie zadaniami**: tworzenie, edycja, usuwanie oraz zmiana statusu
+  zadania (Planned/Active/Blocked/Done), wraz z obsługą zależności między
+  zadaniami.
+- **Zapis danych**: projekt (plan, zadania, pozycje markerów) zapisywany i
+  odczytywany z lokalnych plików `.bwproj`.
+- **Budżet**: deklarowany tygodniowy budżet czasu i miesięczny budżet
+  pieniędzy, z automatycznym śledzeniem zużycia w bieżącym okresie.
+- **Rekomendacje zadań**: silnik rekomendacji podpowiada kolejne zadania do
+  wykonania na podstawie priorytetu, zależności i pozostałego budżetu, wraz
+  z uzasadnieniem.
+- **Testy**: automatyczne testy jednostkowe (`tests/BeaverWorks.Core.Tests`)
+  dla modeli, usług i warstwy zapisu oraz testy integracyjne
+  (`tests/BeaverWorks.Desktop.Tests`) sprawdzające zapis/odczyt projektu i
+  odświeżanie widoków po edycji/usunięciu zadania.
 
 Ustalenia produktowe: [podsumowanie 10x](DOC/beaver-works-podsumowanie.md).
-Następny etap: projekt, przykładowy plan, dodanie zadania kliknięciem i zapis/odczyt pozycji markera.
+Szczegóły wymagań: [context/foundation/prd.md](context/foundation/prd.md).
