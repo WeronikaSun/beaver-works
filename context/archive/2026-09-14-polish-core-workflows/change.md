@@ -1,10 +1,10 @@
 ---
 change_id: polish-core-workflows
 title: Polish core workflows
-status: implemented
+status: archived
 created: 2026-09-14
 updated: 2026-09-14
-archived_at: null
+archived_at: 2026-09-14T07:27:15Z
 ---
 
 ## Notes
