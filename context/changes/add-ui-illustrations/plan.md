@@ -285,22 +285,22 @@ N/A — no data model or persistence changes.
 
 #### Automated
 
-- [x] 1.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore`
-- [x] 1.2 Output directory contains both PNGs after build
+- [x] 1.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore` — 3d965ac
+- [x] 1.2 Output directory contains both PNGs after build — 3d965ac
 
 ### Phase 2: Login/Register illustration layout
 
 #### Automated
 
-- [ ] 2.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore`
-- [ ] 2.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build`
+- [x] 2.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore`
+- [x] 2.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build`
 
 #### Manual
 
-- [ ] 2.3 Login screen shows form left, illustration right, no overlap
-- [ ] 2.4 Register mode shows illustration correctly, budget fields still show/hide
-- [ ] 2.5 Narrow window: illustration column shrinks proportionally, no overlap
-- [ ] 2.6 Login/register end-to-end works with no behavior regression
+- [x] 2.3 Login screen shows form left, illustration right, no overlap
+- [x] 2.4 Register mode shows illustration correctly, budget fields still show/hide
+- [x] 2.5 Narrow window: illustration column shrinks proportionally, no overlap
+- [x] 2.6 Login/register end-to-end works with no behavior regression
 
 ### Phase 3: Recent Projects illustration layout
 
