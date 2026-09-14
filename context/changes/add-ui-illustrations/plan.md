@@ -314,12 +314,12 @@ N/A — no data model or persistence changes.
 
 #### Automated
 
-- [x] 3.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore`
-- [x] 3.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build`
+- [x] 3.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore` — c3b70be
+- [x] 3.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build` — c3b70be
 
 #### Manual
 
-- [x] 3.3 Empty state: illustration at bottom center, no overlap
-- [x] 3.4 Populated list: illustration stays at bottom, list unaffected
-- [x] 3.5 Vertical resize: list sizes to content (capped/scrollable), illustration takes remaining space and scales
-- [x] 3.6 Existing buttons (new project, open, budget settings, logout) work as before
+- [x] 3.3 Empty state: illustration at bottom center, no overlap — c3b70be
+- [x] 3.4 Populated list: illustration stays at bottom, list unaffected — c3b70be
+- [x] 3.5 Vertical resize: list sizes to content (capped/scrollable), illustration takes remaining space and scales — c3b70be
+- [x] 3.6 Existing buttons (new project, open, budget settings, logout) work as before — c3b70be
