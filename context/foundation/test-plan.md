@@ -112,7 +112,12 @@ is the local gate this rollout wires the new test into.
 
 ### 6.2 Adding an integration test (cross-layer, e.g. ViewModel + persistence)
 
-- TBD — see §3 Phase 1 (this rollout phase establishes the pattern for exercising a ViewModel against a real, temp-path-backed JSON store rather than a mock).
+- **Location**: `tests/BeaverWorks.Desktop.Tests/`, mirroring the folder of the ViewModel under test.
+- **Naming**: `<Scenario>Tests.cs` (e.g. `ProjectWorkspacePersistenceTests.cs`), not `<ClassName>Tests.cs` — integration tests describe a scenario, not one class.
+- **Why a separate project**: `BeaverWorks.Desktop`'s ViewModels are `net10.0-windows`/`UseWPF=true` (they expose WPF-typed members, e.g. `PlanCanvasViewModel.PlanImage` is a `BitmapImage`). `BeaverWorks.Core.Tests` deliberately stays plain `net10.0` with no Desktop reference, so a separate project carries the WPF-target cost only where it's actually needed. `BeaverWorks.Desktop.Tests` has no FlaUI dependency and never renders a window or needs an interactive session — it's a normal headless `dotnet test` project.
+- **Gotcha**: any test that constructs a `ProjectWorkspaceViewModel` (or `PlanCanvasViewModel`) needs a **real, decodable image file** for `Project.PlanImagePath` — the constructor eagerly decodes it via `BitmapImage.BeginInit()/EndInit()`. The 4-byte magic-number stub used by `ProjectStoreTests` (Core-only, no ViewModel involved) is not sufficient here and will throw. Copy `tests/BeaverWorks.Desktop.Tests/Assets/sample-floor-plan.png` (itself copied from `src/BeaverWorks.Desktop/Assets/sample-floor-plan.png`) into a temp directory per test.
+- **Reference test**: `tests/BeaverWorks.Desktop.Tests/ProjectWorkspacePersistenceTests.cs`.
+- **Run locally**: `dotnet test tests/BeaverWorks.Desktop.Tests/BeaverWorks.Desktop.Tests.csproj`.
 
 ### 6.3 Adding an e2e/UI test
 

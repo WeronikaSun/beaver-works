@@ -201,23 +201,23 @@ Not applicable — new test project and new test only, no production code or dat
 
 #### Automated
 
-- [x] 1.1 Solution restores cleanly
-- [x] 1.2 Solution builds with 0 warnings
-- [x] 1.3 New project's placeholder test passes
+- [x] 1.1 Solution restores cleanly — 521ea61
+- [x] 1.2 Solution builds with 0 warnings — 521ea61
+- [x] 1.3 New project's placeholder test passes — 521ea61
 
 #### Manual
 
-- [x] 1.4 BeaverWorks.Desktop.Tests appears under the tests solution folder
+- [x] 1.4 BeaverWorks.Desktop.Tests appears under the tests solution folder — 521ea61
 
 ### Phase 2: Implement the critical-path persistence integration test
 
 #### Automated
 
-- [ ] 2.1 New integration test passes
-- [ ] 2.2 Full solution build still 0 warnings
-- [ ] 2.3 Existing test suites unaffected
+- [x] 2.1 New integration test passes
+- [x] 2.2 Full solution build still 0 warnings
+- [x] 2.3 Existing test suites unaffected
 
 #### Manual
 
-- [ ] 2.4 Re-running the test twice in a row passes both times
-- [ ] 2.5 test-plan.md §6.2 reads as a usable, concrete recipe
+- [x] 2.4 Re-running the test twice in a row passes both times
+- [x] 2.5 test-plan.md §6.2 reads as a usable, concrete recipe
