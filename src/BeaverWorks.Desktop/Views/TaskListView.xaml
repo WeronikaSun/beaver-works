@@ -17,6 +17,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="2*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
 
@@ -43,9 +45,26 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <TextBlock Grid.Row="2" Text="Details" FontWeight="Bold" Margin="0,12,0,4" />
+        <TextBlock Grid.Row="2" Text="Done" FontWeight="Bold" Margin="0,12,0,4" />
 
-        <StackPanel Grid.Row="3" Orientation="Vertical"
+        <ListBox Grid.Row="3"
+                  x:Name="DoneTasksListBox"
+                  ItemsSource="{Binding DoneRows}"
+                  SelectedItem="{Binding SelectedRow, Mode=TwoWay}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                        <Ellipse Width="10" Height="10" Margin="0,0,6,0"
+                                 Fill="{Binding Task.Status, Converter={StaticResource TaskStatusToBrushConverter}}" />
+                        <TextBlock Text="{Binding Task.Title}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock Grid.Row="4" Text="Details" FontWeight="Bold" Margin="0,12,0,4" />
+
+        <StackPanel Grid.Row="5" Orientation="Vertical"
                     Visibility="{Binding SelectedTask, Converter={StaticResource NullToVisibilityConverter}}">
             <TextBlock Text="{Binding SelectedTask.Title}" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,4" />
             <TextBlock Text="{Binding SelectedTask.Description}" TextWrapping="Wrap" Margin="0,0,0,8" />

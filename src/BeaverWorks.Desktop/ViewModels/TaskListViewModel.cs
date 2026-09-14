@@ -18,11 +18,16 @@ public partial class TaskListViewModel : ObservableObject
 
     public ObservableCollection<RenovationTask> Tasks { get; } = [];
 
-    /// <summary>The task list sorted for display (FR-014): recommended tasks first, then
-    /// by priority ascending, then by <see cref="RenovationTask.CreatedAt"/> ascending —
-    /// each paired with its recommendation/exclusion label. Rebuilt wholesale by
-    /// <see cref="UpdateRecommendations"/> whenever recommendations are recomputed.</summary>
+    /// <summary>The active (non-Done) task list sorted for display (FR-014): recommended tasks first, then
+    /// by priority ascending, then by <see cref="RenovationTask.CreatedAt"/> ascending — each paired with
+    /// its recommendation/exclusion label. Rebuilt wholesale by <see cref="UpdateRecommendations"/>
+    /// whenever recommendations are recomputed.</summary>
     public ObservableCollection<TaskListRowViewModel> Rows { get; } = [];
+
+    /// <summary>Completed (<see cref="RenovationTaskStatus.Done"/>) tasks, sorted most-recently-completed
+    /// first by <see cref="RenovationTask.UpdatedAt"/>. Rebuilt alongside <see cref="Rows"/> by
+    /// <see cref="UpdateRecommendations"/>.</summary>
+    public ObservableCollection<TaskListRowViewModel> DoneRows { get; } = [];
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EditCommand))]
@@ -100,17 +105,20 @@ public partial class TaskListViewModel : ObservableObject
 
     /// <summary>
     /// Rebuilds <see cref="Rows"/> from the current <see cref="Tasks"/> and
-    /// <paramref name="recommendations"/> (FR-014), ordered recommended-first,
-    /// then by priority ascending, then by <see cref="RenovationTask.CreatedAt"/>
-    /// ascending, and refreshes <see cref="BudgetSummaryText"/> from
-    /// <paramref name="profile"/>. Preserves the current selection by Id.
+    /// <paramref name="recommendations"/> (FR-014), grouped into four bands
+    /// in this order — <see cref="RenovationTaskStatus.Active"/>, recommended
+    /// <see cref="RenovationTaskStatus.Planned"/>, <see cref="RenovationTaskStatus.Blocked"/>,
+    /// then over-budget — each band sorted by priority ascending, then by
+    /// <see cref="RenovationTask.CreatedAt"/> ascending. Refreshes
+    /// <see cref="BudgetSummaryText"/> from <paramref name="profile"/>.
+    /// Preserves the current selection by Id.
     /// </summary>
     public void UpdateRecommendations(IReadOnlyList<TaskRecommendation> recommendations, UserBudgetProfile profile)
     {
         var previousSelectedId = SelectedTask?.Id;
         var recommendationsByTaskId = recommendations.ToDictionary(r => r.TaskId);
 
-        var orderedRows = Tasks
+        var allRows = Tasks
             .Select(task =>
             {
                 var recommendation = recommendationsByTaskId.TryGetValue(task.Id, out var found)
@@ -119,14 +127,28 @@ public partial class TaskListViewModel : ObservableObject
 
                 return new TaskListRowViewModel(task, recommendation.Label, recommendation.IsRecommended);
             })
-            .OrderByDescending(row => row.IsRecommended)
+            .ToList();
+
+        var orderedActiveRows = allRows
+            .Where(row => row.Task.Status != RenovationTaskStatus.Done)
+            .OrderBy(GetSortBand)
             .ThenBy(row => row.Task.Priority)
             .ThenBy(row => row.Task.CreatedAt);
 
+        var orderedDoneRows = allRows
+            .Where(row => row.Task.Status == RenovationTaskStatus.Done)
+            .OrderByDescending(row => row.Task.UpdatedAt);
+
         Rows.Clear();
-        foreach (var row in orderedRows)
+        foreach (var row in orderedActiveRows)
         {
             Rows.Add(row);
+        }
+
+        DoneRows.Clear();
+        foreach (var row in orderedDoneRows)
+        {
+            DoneRows.Add(row);
         }
 
         BudgetSummaryText = $"Remaining: {profile.RemainingTimeHours:0.#}h this week · {profile.RemainingMoney:C} this month";
@@ -135,16 +157,19 @@ public partial class TaskListViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Sets <see cref="SelectedRow"/> by task Id (looked up in <see cref="Rows"/>)
-    /// without raising <see cref="SelectionChanged"/> — used when selection is
-    /// driven externally (e.g. a canvas marker click) to avoid a sync loop.
+    /// Sets <see cref="SelectedRow"/> by task Id (looked up across <see cref="Rows"/>
+    /// and <see cref="DoneRows"/>) without raising <see cref="SelectionChanged"/> —
+    /// used when selection is driven externally (e.g. a canvas marker click) to
+    /// avoid a sync loop.
     /// </summary>
     public void Select(Guid? taskId)
     {
         _suppressSelectionChanged = true;
         try
         {
-            SelectedRow = taskId is null ? null : Rows.FirstOrDefault(r => r.Task.Id == taskId);
+            SelectedRow = taskId is null
+                ? null
+                : Rows.FirstOrDefault(r => r.Task.Id == taskId) ?? DoneRows.FirstOrDefault(r => r.Task.Id == taskId);
         }
         finally
         {
@@ -186,4 +211,28 @@ public partial class TaskListViewModel : ObservableObject
     private void Delete() => DeleteRequested?.Invoke(this, SelectedTask!.Id);
 
     private bool HasSelectedTask => SelectedTask is not null;
+
+    /// <summary>
+    /// The active-list sort band for <paramref name="row"/>: 0 =
+    /// <see cref="RenovationTaskStatus.Active"/> (currently being worked
+    /// on), 1 = recommended <see cref="RenovationTaskStatus.Planned"/>
+    /// tasks, 2 = blocked (own status, or the legacy "Blocked by
+    /// dependency" label), 3 = everything else — i.e. a
+    /// <see cref="RenovationTaskStatus.Planned"/> task that doesn't fit
+    /// the remaining budget ("Over budget").
+    /// </summary>
+    private static int GetSortBand(TaskListRowViewModel row)
+    {
+        if (row.Task.Status == RenovationTaskStatus.Active)
+        {
+            return 0;
+        }
+
+        if (row.Task.Status == RenovationTaskStatus.Blocked || row.Label == "Blocked by dependency")
+        {
+            return 2;
+        }
+
+        return row.IsRecommended ? 1 : 3;
+    }
 }

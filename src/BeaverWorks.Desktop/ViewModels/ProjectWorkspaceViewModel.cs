@@ -164,6 +164,10 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
         {
             ApplyBudgetConsumption(task);
         }
+        else if (previousStatus == RenovationTaskStatus.Done && task.Status != RenovationTaskStatus.Done)
+        {
+            ReverseBudgetConsumption(task);
+        }
 
         RecomputeRecommendations();
     }
@@ -248,6 +252,29 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
     {
         var profile = _budgetProfileStore.Load(_username);
         BudgetConsumptionService.ApplyCompletion(profile, completedTask, _project.Tasks);
+
+        try
+        {
+            _budgetProfileStore.Save(_username, profile);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            SaveFailed?.Invoke(this, ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// The inverse of <see cref="ApplyBudgetConsumption"/>: restores
+    /// <paramref name="reactivatedTask"/>'s effective time/cost to the
+    /// user's budget profile (floored at the declared budget, per
+    /// <see cref="BudgetConsumptionService.ReverseCompletion"/>) and
+    /// persists it, reporting a failure via <see cref="SaveFailed"/>
+    /// without reverting the already-saved task.
+    /// </summary>
+    private void ReverseBudgetConsumption(RenovationTask reactivatedTask)
+    {
+        var profile = _budgetProfileStore.Load(_username);
+        BudgetConsumptionService.ReverseCompletion(profile, reactivatedTask, _project.Tasks);
 
         try
         {

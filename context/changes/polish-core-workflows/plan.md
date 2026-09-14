@@ -358,30 +358,31 @@ No schema changes: `RenovationTask.Status`/`DependsOnTaskIds` and `UserBudgetPro
 
 #### Automated
 
-- [x] 2.1 Build succeeds with 0 warnings
-- [x] 2.2 Core unit tests still pass
+- [x] 2.1 Build succeeds with 0 warnings — 71d46d5
+- [x] 2.2 Core unit tests still pass — 71d46d5
 
 #### Manual
 
-- [ ] 2.3 Create a task with every field populated including a dependency on an existing not-done task; confirm it saves as Blocked
-- [ ] 2.4 Create a task with no dependencies selected; confirm it saves as Planned
-- [ ] 2.5 Confirm Done tasks never appear as selectable dependencies in Create or Edit
-- [ ] 2.6 In Edit, pick Status = Active with a not-done dependency checked; confirm save forces Blocked
-- [ ] 2.7 In Edit, clear/leave-only-Done dependencies; confirm a previously Blocked task can move to another status again
+- [x] 2.3 Create a task with every field populated including a dependency on an existing not-done task; confirm it saves as Blocked
+- [x] 2.4 Create a task with no dependencies selected; confirm it saves as Planned
+- [x] 2.5 Confirm Done tasks never appear as selectable dependencies in Create or Edit
+- [x] 2.6 In Edit, pick Status = Active with a not-done dependency checked; confirm save forces Blocked
+- [x] 2.7 (adapted) Mark a task's dependency Done via the quick status dropdown; confirm the dependent task automatically cascades from Blocked to Planned without re-opening Edit
 
 ### Phase 3: Task List Done Section & Budget Reversal Wiring
 
 #### Automated
 
-- [ ] 3.1 Build succeeds with 0 warnings
-- [ ] 3.2 Core unit tests still pass
+- [x] 3.1 Build succeeds with 0 warnings
+- [x] 3.2 Core unit tests still pass
 
 #### Manual
 
-- [ ] 3.3 Complete a task; confirm it moves from Active to the top of Done and the budget summary reflects consumption
-- [ ] 3.4 Complete a second, older task; confirm Done list orders most-recently-completed first
-- [ ] 3.5 Reactivate a Done task; confirm it returns to Active and budget summary's remaining time/money increases accordingly
-- [ ] 3.6 Reactivate a Done task where reversal would exceed the declared budget; confirm remaining time/money caps at the declared budget
+- [x] 3.3 Complete a task; confirm it moves from Active to the top of Done and the budget summary reflects consumption
+- [x] 3.4 Complete a second, older task; confirm Done list orders most-recently-completed first
+- [x] 3.5 Reactivate a Done task; confirm it returns to Active and budget summary's remaining time/money increases accordingly
+- [x] 3.6 Reactivate a Done task where reversal would exceed the declared budget; confirm remaining time/money caps at the declared budget
+- [x] 3.7 (adapted) Active list groups by Active → recommended Planned → Blocked → Over-budget, each band sorted by priority/date; Done list no longer shows the rationale line
 
 ### Phase 4: Navigation — Back Button & Logout
 
