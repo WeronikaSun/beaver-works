@@ -42,7 +42,7 @@ public class ProjectWorkspacePersistenceTests : IDisposable
             Directory.Delete(_tempDirectory, recursive: true);
         }
     }
-
+    
     [Fact]
     public void PinTaskThenReload_ReproducesTitleAndMarkerPositionExactly()
     {

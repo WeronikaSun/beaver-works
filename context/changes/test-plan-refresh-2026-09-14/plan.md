@@ -192,22 +192,22 @@ Not applicable — no production code changes, no data model changes, no new tes
 
 #### Automated
 
-- [x] 1.1 test-plan.md still renders as valid Markdown with no broken table rows
+- [x] 1.1 test-plan.md still renders as valid Markdown with no broken table rows — fcff9f3
 
 #### Manual
 
-- [ ] 1.2 §1, §2, §3, §7, and §8 all read consistently
+- [x] 1.2 §1, §2, §3, §7, and §8 all read consistently — fcff9f3
 
 ### Phase 2: Implement the ProjectWorkspaceViewModel save/refresh integration test
 
 #### Automated
 
-- [ ] 2.1 New theory test passes, both cases
-- [ ] 2.2 Full solution build still 0 warnings
-- [ ] 2.3 Existing test suites unaffected
-- [ ] 2.4 Existing Phase 1 test in the same project still passes
+- [x] 2.1 New theory test passes, both cases
+- [x] 2.2 Full solution build still 0 warnings
+- [x] 2.3 Existing test suites unaffected
+- [x] 2.4 Existing Phase 1 test in the same project still passes
 
 #### Manual
 
-- [ ] 2.5 Re-running the test project twice in a row passes both times
-- [ ] 2.6 test-plan.md §6.4 reads as a usable, concrete note
+- [x] 2.5 Re-running the test project twice in a row passes both times
+- [x] 2.6 test-plan.md §6.4 reads as a usable, concrete note

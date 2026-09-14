@@ -73,7 +73,7 @@ orchestrator updates Status as artifacts appear on disk.
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|------------|------------------|----------------|-------------|--------|----------------|
 | 1 | Critical-path persistence coverage | Prove the create/open → pin task → save → reopen flow preserves the task and its exact marker position end-to-end | #1 | integration | complete | context/archive/2026-09-14-testing-critical-path-persistence/ |
-| 2 | ProjectWorkspaceViewModel save/refresh coverage | Prove a task edit and delete via ProjectWorkspaceViewModel is persisted via save and reflected in both TaskList and Canvas panel ViewModels | #2 | integration | planned | context/changes/test-plan-refresh-2026-09-14/ |
+| 2 | ProjectWorkspaceViewModel save/refresh coverage | Prove a task edit and delete via ProjectWorkspaceViewModel is persisted via save and reflected in both TaskList and Canvas panel ViewModels | #2 | integration | complete | context/changes/test-plan-refresh-2026-09-14/ |
 
 **Status vocabulary** (fixed): `not started` → `change opened` →
 `researched` → `planned` → `implementing` → `complete`.
@@ -132,7 +132,7 @@ is the local gate this rollout wires the new test into.
 
 ### 6.4 Per-rollout-phase notes
 
-(Empty — filled in after §3 Phase 1 ships.)
+- **Phase 2 (`ProjectWorkspaceMutationRefreshTests`):** when a test's job is to prove a ViewModel-driven mutation propagates correctly, assert the source-of-truth model AND every panel ViewModel that's supposed to reflect it — e.g. `Project.Tasks`, `TaskList.Tasks`, and `Canvas.Markers` for `ProjectWorkspaceViewModel` — not just the model. Do this both immediately after the mutation and after a genuine reload (fresh `ProjectStore.Load` + a second ViewModel instance). Asserting only the model is the anti-pattern this pattern exists to avoid — it still passes if a panel's refresh call is accidentally removed.
 
 ## 7. What We Deliberately Don't Test
 
