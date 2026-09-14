@@ -202,12 +202,12 @@ Not applicable — no production code changes, no data model changes, no new tes
 
 #### Automated
 
-- [x] 2.1 New theory test passes, both cases
-- [x] 2.2 Full solution build still 0 warnings
-- [x] 2.3 Existing test suites unaffected
-- [x] 2.4 Existing Phase 1 test in the same project still passes
+- [x] 2.1 New theory test passes, both cases — 2fef258
+- [x] 2.2 Full solution build still 0 warnings — 2fef258
+- [x] 2.3 Existing test suites unaffected — 2fef258
+- [x] 2.4 Existing Phase 1 test in the same project still passes — 2fef258
 
 #### Manual
 
-- [x] 2.5 Re-running the test project twice in a row passes both times
-- [x] 2.6 test-plan.md §6.4 reads as a usable, concrete note
+- [x] 2.5 Re-running the test project twice in a row passes both times — 2fef258
+- [x] 2.6 test-plan.md §6.4 reads as a usable, concrete note — 2fef258
