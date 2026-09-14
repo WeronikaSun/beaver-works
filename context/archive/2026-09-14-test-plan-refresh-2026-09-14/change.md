@@ -1,10 +1,10 @@
 ---
 change_id: test-plan-refresh-2026-09-14
 title: Add Risk #2 rollout phase for ProjectWorkspaceViewModel save/refresh
-status: implemented
+status: archived
 created: 2026-09-14
 updated: 2026-09-14
-archived_at: null
+archived_at: 2026-09-14T10:04:16Z
 ---
 
 ## Notes
