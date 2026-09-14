@@ -199,14 +199,20 @@ without changing any existing control or binding.
 so it sits below the project list without competing for the list's
 available space.
 
-**Contract**: Root `Grid.RowDefinitions` gains one more row (`Auto`) after
+**Contract**: Root `Grid.RowDefinitions` gains one more row after
 the existing error-message row (row index 4). Existing rows 0-3 (title,
-toolbar, list, error message) are unchanged. New
+toolbar, list, error message) are unchanged in position. New
 `Image Grid.Row="4"` bound to `Source="/Assets/recent-projects-illustration.png"`,
-`Stretch="Uniform"`, `HorizontalAlignment="Center"`, with a `MaxHeight` (or
-similar constraint) so it stays a fixed/bounded height and the list row
-(`Height="*"`) keeps priority for remaining space, per the fixed-height-row
-decision.
+`Stretch="Uniform"`, `HorizontalAlignment="Center"`.
+
+> **Revised during implementation (twice)**: (1) the plan originally
+> specified a fixed/Auto-height illustration row capped by `MaxHeight`;
+> manual testing showed the user wanted the illustration to resize with
+> the window, so the row was changed to proportional star-sizing. (2)
+> further feedback noted the list shouldn't dominate space for users with
+> few projects, so the final layout sizes the list row (`Auto`, `ListBox`
+> capped at `MaxHeight="200"` with its own internal scrolling) to its
+> content and gives the illustration row `*` to take the remaining space.
 
 ### Success Criteria:
 
@@ -222,8 +228,10 @@ decision.
   with the empty-state message or toolbar buttons.
 - With one or more projects in the list, illustration remains at the
   bottom, list still scrolls/shows all items above it without overlap.
-- Resize the window vertically (shrink); list area shrinks/scrolls first,
-  illustration stays at its fixed height at the bottom.
+- Resize the window vertically (shrink/grow); the list sizes to its
+  content (up to a capped max height with internal scrolling for many
+  items) and the illustration takes the remaining space, scaling
+  proportionally with no overlap.
 - Exercise existing buttons (New project, Open from disk, Budget
   settings, Logout) to confirm no behavior regression.
 
@@ -292,26 +300,26 @@ N/A — no data model or persistence changes.
 
 #### Automated
 
-- [x] 2.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore`
-- [x] 2.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build`
+- [x] 2.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore` — 14369c5
+- [x] 2.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build` — 14369c5
 
 #### Manual
 
-- [x] 2.3 Login screen shows form left, illustration right, no overlap
-- [x] 2.4 Register mode shows illustration correctly, budget fields still show/hide
-- [x] 2.5 Narrow window: illustration column shrinks proportionally, no overlap
-- [x] 2.6 Login/register end-to-end works with no behavior regression
+- [x] 2.3 Login screen shows form left, illustration right, no overlap — 14369c5
+- [x] 2.4 Register mode shows illustration correctly, budget fields still show/hide — 14369c5
+- [x] 2.5 Narrow window: illustration column shrinks proportionally, no overlap — 14369c5
+- [x] 2.6 Login/register end-to-end works with no behavior regression — 14369c5
 
 ### Phase 3: Recent Projects illustration layout
 
 #### Automated
 
-- [ ] 3.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore`
-- [ ] 3.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build`
+- [x] 3.1 Build succeeds: `dotnet build BeaverWorks.sln --no-restore`
+- [x] 3.2 Existing tests pass: `dotnet test BeaverWorks.sln --no-build`
 
 #### Manual
 
-- [ ] 3.3 Empty state: illustration at bottom center, no overlap
-- [ ] 3.4 Populated list: illustration stays at bottom, list unaffected
-- [ ] 3.5 Vertical resize: list shrinks/scrolls first, illustration stays fixed height
-- [ ] 3.6 Existing buttons (new project, open, budget settings, logout) work as before
+- [x] 3.3 Empty state: illustration at bottom center, no overlap
+- [x] 3.4 Populated list: illustration stays at bottom, list unaffected
+- [x] 3.5 Vertical resize: list sizes to content (capped/scrollable), illustration takes remaining space and scales
+- [x] 3.6 Existing buttons (new project, open, budget settings, logout) work as before

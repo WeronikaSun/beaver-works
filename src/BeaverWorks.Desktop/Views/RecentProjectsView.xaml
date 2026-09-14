@@ -16,8 +16,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="Projects" FontSize="20" FontWeight="Bold" Margin="0,0,0,12" />
@@ -35,12 +36,14 @@
                    VerticalAlignment="Center"
                    FontSize="16"
                    Foreground="Gray"
+                   Margin="0,24"
                    Visibility="{Binding IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
         <ListBox Grid.Row="2"
                  x:Name="RecentProjectsList"
                  ItemsSource="{Binding RecentProjects}"
                  Visibility="{Binding HasRecentProjects, Converter={StaticResource BooleanToVisibilityConverter}}"
+                 MaxHeight="200"
                  BorderThickness="0"
                  Background="Transparent">
             <ListBox.ItemTemplate>
@@ -64,5 +67,11 @@
                    TextWrapping="Wrap"
                    Margin="0,12,0,0"
                    Visibility="{Binding ErrorMessage, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}" />
+
+        <Image Grid.Row="4"
+               Source="/Assets/recent-projects-illustration.png"
+               Stretch="Uniform"
+               Margin="0,12,0,0"
+               HorizontalAlignment="Center" />
     </Grid>
 </UserControl>
