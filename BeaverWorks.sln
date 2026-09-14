@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeaverWorks.Core.Tests", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeaverWorks.UiTests", "tests\BeaverWorks.UiTests\BeaverWorks.UiTests.csproj", "{87AF9A25-F3D5-415A-9563-407E381D5047}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeaverWorks.Desktop.Tests", "tests\BeaverWorks.Desktop.Tests\BeaverWorks.Desktop.Tests.csproj", "{AFA734DA-753A-4E0D-821A-D89E4FF46418}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,18 @@ Global
 		{87AF9A25-F3D5-415A-9563-407E381D5047}.Release|x64.Build.0 = Release|Any CPU
 		{87AF9A25-F3D5-415A-9563-407E381D5047}.Release|x86.ActiveCfg = Release|Any CPU
 		{87AF9A25-F3D5-415A-9563-407E381D5047}.Release|x86.Build.0 = Release|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Debug|x64.Build.0 = Debug|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Debug|x86.Build.0 = Debug|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Release|x64.ActiveCfg = Release|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Release|x64.Build.0 = Release|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Release|x86.ActiveCfg = Release|Any CPU
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,5 +96,6 @@ Global
 		{FD4A942C-157E-4C65-A2EF-01790222604C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{93410A1D-B5B4-4F23-A5EA-4347E0A42ACA} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{87AF9A25-F3D5-415A-9563-407E381D5047} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{AFA734DA-753A-4E0D-821A-D89E4FF46418} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal
