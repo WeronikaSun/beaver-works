@@ -21,17 +21,23 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="Tasks" FontWeight="Bold" Margin="0,0,0,4" />
+        <TextBlock Grid.Row="0" Text="{Binding BudgetSummaryText}"
+                   FontSize="11" Foreground="Gray"
+                   HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,4" />
 
         <ListBox Grid.Row="1"
                   x:Name="TasksListBox"
-                  ItemsSource="{Binding Tasks}"
-                  SelectedItem="{Binding SelectedTask, Mode=TwoWay}">
+                  ItemsSource="{Binding Rows}"
+                  SelectedItem="{Binding SelectedRow, Mode=TwoWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="10" Height="10" Margin="0,0,6,0"
-                                 Fill="{Binding Status, Converter={StaticResource TaskStatusToBrushConverter}}" />
-                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Vertical" Margin="0,2">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="10" Height="10" Margin="0,0,6,0"
+                                     Fill="{Binding Task.Status, Converter={StaticResource TaskStatusToBrushConverter}}" />
+                            <TextBlock Text="{Binding Task.Title}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Label}" FontSize="11" Foreground="Gray" Margin="16,0,0,0" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

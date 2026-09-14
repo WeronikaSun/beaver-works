@@ -18,10 +18,25 @@ public partial class TaskListViewModel : ObservableObject
 
     public ObservableCollection<RenovationTask> Tasks { get; } = [];
 
+    /// <summary>The task list sorted for display (FR-014): recommended tasks first, then
+    /// by priority ascending, then by <see cref="RenovationTask.CreatedAt"/> ascending —
+    /// each paired with its recommendation/exclusion label. Rebuilt wholesale by
+    /// <see cref="UpdateRecommendations"/> whenever recommendations are recomputed.</summary>
+    public ObservableCollection<TaskListRowViewModel> Rows { get; } = [];
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EditCommand))]
     [NotifyCanExecuteChangedFor(nameof(DeleteCommand))]
-    private RenovationTask? _selectedTask;
+    private TaskListRowViewModel? _selectedRow;
+
+    /// <summary>A persistent header summary of the remaining time/money budget (FR-013), sourced
+    /// from the same profile passed to the most recent <see cref="UpdateRecommendations"/> call.</summary>
+    [ObservableProperty]
+    private string _budgetSummaryText = string.Empty;
+
+    /// <summary>The currently selected task, derived from <see cref="SelectedRow"/> so existing
+    /// consumers (the detail panel, <c>App.xaml.cs</c>, <see cref="EditTaskViewModel"/>) keep working unchanged.</summary>
+    public RenovationTask? SelectedTask => SelectedRow?.Task;
 
     /// <summary>The full set of statuses shown in the quick status-change dropdown.</summary>
     public IReadOnlyList<RenovationTaskStatus> StatusOptions { get; } = Enum.GetValues<RenovationTaskStatus>();
@@ -65,7 +80,10 @@ public partial class TaskListViewModel : ObservableObject
 
     /// <summary>
     /// Replaces the list's contents, re-selecting the previous
-    /// <see cref="SelectedTask"/> by Id if it's still present.
+    /// <see cref="SelectedTask"/> by Id if it's still present. Note this
+    /// only refreshes the raw <see cref="Tasks"/> collection — callers
+    /// must follow up with <see cref="UpdateRecommendations"/> to rebuild
+    /// <see cref="Rows"/> against the latest budget profile.
     /// </summary>
     public void Refresh(IEnumerable<RenovationTask> tasks)
     {
@@ -81,16 +99,52 @@ public partial class TaskListViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Sets <see cref="SelectedTask"/> by Id without raising
-    /// <see cref="SelectionChanged"/> — used when selection is driven
-    /// externally (e.g. a canvas marker click) to avoid a sync loop.
+    /// Rebuilds <see cref="Rows"/> from the current <see cref="Tasks"/> and
+    /// <paramref name="recommendations"/> (FR-014), ordered recommended-first,
+    /// then by priority ascending, then by <see cref="RenovationTask.CreatedAt"/>
+    /// ascending, and refreshes <see cref="BudgetSummaryText"/> from
+    /// <paramref name="profile"/>. Preserves the current selection by Id.
+    /// </summary>
+    public void UpdateRecommendations(IReadOnlyList<TaskRecommendation> recommendations, UserBudgetProfile profile)
+    {
+        var previousSelectedId = SelectedTask?.Id;
+        var recommendationsByTaskId = recommendations.ToDictionary(r => r.TaskId);
+
+        var orderedRows = Tasks
+            .Select(task =>
+            {
+                var recommendation = recommendationsByTaskId.TryGetValue(task.Id, out var found)
+                    ? found
+                    : new TaskRecommendation(task.Id, false, string.Empty);
+
+                return new TaskListRowViewModel(task, recommendation.Label, recommendation.IsRecommended);
+            })
+            .OrderByDescending(row => row.IsRecommended)
+            .ThenBy(row => row.Task.Priority)
+            .ThenBy(row => row.Task.CreatedAt);
+
+        Rows.Clear();
+        foreach (var row in orderedRows)
+        {
+            Rows.Add(row);
+        }
+
+        BudgetSummaryText = $"Remaining: {profile.RemainingTimeHours:0.#}h this week · {profile.RemainingMoney:C} this month";
+
+        Select(previousSelectedId);
+    }
+
+    /// <summary>
+    /// Sets <see cref="SelectedRow"/> by task Id (looked up in <see cref="Rows"/>)
+    /// without raising <see cref="SelectionChanged"/> — used when selection is
+    /// driven externally (e.g. a canvas marker click) to avoid a sync loop.
     /// </summary>
     public void Select(Guid? taskId)
     {
         _suppressSelectionChanged = true;
         try
         {
-            SelectedTask = taskId is null ? null : Tasks.FirstOrDefault(t => t.Id == taskId);
+            SelectedRow = taskId is null ? null : Rows.FirstOrDefault(r => r.Task.Id == taskId);
         }
         finally
         {
@@ -98,8 +152,9 @@ public partial class TaskListViewModel : ObservableObject
         }
     }
 
-    partial void OnSelectedTaskChanged(RenovationTask? value)
+    partial void OnSelectedRowChanged(TaskListRowViewModel? value)
     {
+        OnPropertyChanged(nameof(SelectedTask));
         OnPropertyChanged(nameof(SelectedTaskDependencySummary));
         OnPropertyChanged(nameof(SelectedTaskEstimatedCostDisplay));
         OnPropertyChanged(nameof(SelectedTaskEstimatedTimeDisplay));
@@ -110,7 +165,7 @@ public partial class TaskListViewModel : ObservableObject
             return;
         }
 
-        SelectionChanged?.Invoke(this, value?.Id);
+        SelectionChanged?.Invoke(this, value?.Task.Id);
     }
 
     [RelayCommand]

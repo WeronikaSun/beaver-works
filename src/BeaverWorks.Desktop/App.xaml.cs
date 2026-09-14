@@ -18,6 +18,7 @@ public partial class App : Application
     private UserSession? _userSession;
     private IProjectStore? _projectStore;
     private IRecentProjectsStore? _recentProjectsStore;
+    private IUserBudgetProfileStore? _budgetProfileStore;
     private MainWindow? _mainWindow;
 
     protected override void OnStartup(StartupEventArgs e)
@@ -29,6 +30,7 @@ public partial class App : Application
         _userSession = new UserSession();
         _projectStore = new ProjectStore();
         _recentProjectsStore = new RecentProjectsStore();
+        _budgetProfileStore = new UserBudgetProfileStore();
 
         _mainWindow = new MainWindow();
         MainWindow = _mainWindow;
@@ -50,9 +52,18 @@ public partial class App : Application
     {
         var recentProjectsViewModel = new RecentProjectsViewModel(_userSession!.CurrentUsername!, _projectStore!, _recentProjectsStore!);
         recentProjectsViewModel.NewProjectRequested += (_, _) => ShowNewProjectDialog();
+        recentProjectsViewModel.BudgetSettingsRequested += (_, _) => ShowBudgetSettingsDialog();
         recentProjectsViewModel.ProjectOpened += (_, args) => ShowPlanCanvas(args);
 
         _mainWindow!.Content = new RecentProjectsView { DataContext = recentProjectsViewModel };
+    }
+
+    private void ShowBudgetSettingsDialog()
+    {
+        var budgetSettingsViewModel = new BudgetSettingsViewModel(_userSession!.CurrentUsername!, _budgetProfileStore!);
+
+        var dialog = new BudgetSettingsDialog(budgetSettingsViewModel) { Owner = _mainWindow };
+        dialog.ShowDialog();
     }
 
     private void ShowNewProjectDialog()
@@ -73,7 +84,7 @@ public partial class App : Application
 
     private void ShowPlanCanvas(OpenedProjectEventArgs args)
     {
-        var workspaceViewModel = new ProjectWorkspaceViewModel(args.Project, args.FilePath, _projectStore!);
+        var workspaceViewModel = new ProjectWorkspaceViewModel(args.Project, args.FilePath, _projectStore!, _userSession!.CurrentUsername!, _budgetProfileStore!);
         workspaceViewModel.NewTaskRequested += (_, position) => ShowNewTaskDialog(workspaceViewModel, position);
         workspaceViewModel.TaskList.EditRequested += (_, taskId) => ShowEditTaskDialog(workspaceViewModel, taskId);
         workspaceViewModel.TaskList.DeleteRequested += (_, taskId) => ConfirmAndDeleteTask(workspaceViewModel, taskId);

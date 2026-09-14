@@ -428,32 +428,32 @@ migration step is needed for existing users.
 
 #### Manual
 
-- [ ] 1.3 Inspect generated budget-profile.json shape after Save
-- [ ] 1.4 Confirm reset-on-stale-period-key behavior per dimension
+- [x] 1.3 Inspect generated budget-profile.json shape after Save
+- [x] 1.4 Confirm reset-on-stale-period-key behavior per dimension
 
 ### Phase 2: Recommendation Engine
 
 #### Automated
 
-- [x] 2.1 Build succeeds with 0 warnings
-- [x] 2.2 Core unit tests pass (TaskRecommendationEngine, BudgetConsumptionService)
+- [x] 2.1 Build succeeds with 0 warnings — 611216d
+- [x] 2.2 Core unit tests pass (TaskRecommendationEngine, BudgetConsumptionService) — 611216d
 
 #### Manual
 
-- [ ] 2.3 Hand-walk the US-02 given/when/then against the engine's output
+- [x] 2.3 Hand-walk the US-02 given/when/then against the engine's output
 
 ### Phase 3: Desktop Integration
 
 #### Automated
 
-- [ ] 3.1 Build succeeds with 0 warnings
-- [ ] 3.2 Existing and new Core unit tests still pass
+- [x] 3.1 Build succeeds with 0 warnings
+- [x] 3.2 Existing and new Core unit tests still pass
 
 #### Manual
 
-- [ ] 3.3 Budget settings dialog: declare and save budgets
-- [ ] 3.4 Task list sorting, rationale, and exclusion-reason labels on a varied task set
-- [ ] 3.5 Header shows correct remaining time/money
-- [ ] 3.6 Completing a task consumes budget and recomputes the list immediately
-- [ ] 3.7 Editing the budget mid-period recomputes immediately
-- [ ] 3.8 Persistence across app restart, including period-reset behavior
+- [x] 3.3 Budget settings dialog: declare and save budgets
+- [x] 3.4 Task list sorting, rationale, and exclusion-reason labels on a varied task set
+- [x] 3.5 Header shows correct remaining time/money
+- [x] 3.6 Completing a task consumes budget and recomputes the list immediately
+- [x] 3.7 Editing the budget mid-period recomputes immediately
+- [x] 3.8 Persistence across app restart, including period-reset behavior

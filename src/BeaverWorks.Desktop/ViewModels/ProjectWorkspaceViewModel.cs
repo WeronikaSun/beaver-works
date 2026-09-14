@@ -1,6 +1,7 @@
 using System.IO;
 using BeaverWorks.Core.Models;
 using BeaverWorks.Core.Persistence;
+using BeaverWorks.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace BeaverWorks.Desktop.ViewModels;
@@ -11,13 +12,19 @@ namespace BeaverWorks.Desktop.ViewModels;
 /// task list — together so their selections and edits stay in sync.
 /// Neither child view model talks to <see cref="IProjectStore"/> directly;
 /// every mutation flows through this class so there's a single point that
-/// saves and refreshes both panels consistently.
+/// saves and refreshes both panels consistently. Also owns the
+/// budget-recommendation recompute (FR-014) and consumption (FR-015)
+/// hooks: every successful save recomputes recommendations against the
+/// latest budget profile, and a transition to <see cref="RenovationTaskStatus.Done"/>
+/// deducts that task's estimate from the profile.
 /// </summary>
 public partial class ProjectWorkspaceViewModel : ObservableObject
 {
     private readonly Project _project;
     private readonly string _projectFilePath;
     private readonly IProjectStore _projectStore;
+    private readonly string _username;
+    private readonly IUserBudgetProfileStore _budgetProfileStore;
 
     public string ProjectName => _project.Name;
 
@@ -38,11 +45,13 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
     /// </summary>
     public event EventHandler<string>? SaveFailed;
 
-    public ProjectWorkspaceViewModel(Project project, string projectFilePath, IProjectStore projectStore)
+    public ProjectWorkspaceViewModel(Project project, string projectFilePath, IProjectStore projectStore, string username, IUserBudgetProfileStore budgetProfileStore)
     {
         _project = project;
         _projectFilePath = projectFilePath;
         _projectStore = projectStore;
+        _username = username;
+        _budgetProfileStore = budgetProfileStore;
 
         Canvas = new PlanCanvasViewModel(project);
         TaskList = new TaskListViewModel(project.Tasks);
@@ -51,6 +60,8 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
         Canvas.MarkerSelected += (_, taskId) => TaskList.Select(taskId);
         TaskList.SelectionChanged += (_, taskId) => Canvas.SelectMarker(taskId);
         TaskList.StatusChangeRequested += (_, change) => UpdateTaskStatus(change.TaskId, change.NewStatus);
+
+        RecomputeRecommendations();
     }
 
     /// <summary>
@@ -70,14 +81,22 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
 
         Canvas.AddMarker(task);
         TaskList.Refresh(_project.Tasks);
+        RecomputeRecommendations();
     }
 
     /// <summary>
     /// Replaces an existing task with an updated copy, persists the
     /// change, and refreshes both panels so the marker and list stay
-    /// consistent with the new data.
+    /// consistent with the new data. If this transitions the task to
+    /// <see cref="RenovationTaskStatus.Done"/> from some other status, the
+    /// task's effective time/cost is deducted from the user's budget
+    /// profile after the project save succeeds (FR-015); a failure while
+    /// saving the budget profile reports through <see cref="SaveFailed"/>
+    /// but does not revert the already-saved task.
     /// </summary>
-    public void UpdateTask(RenovationTask task)
+    public void UpdateTask(RenovationTask task) => UpdateTask(task, previousStatusOverride: null);
+
+    private void UpdateTask(RenovationTask task, RenovationTaskStatus? previousStatusOverride)
     {
         var index = _project.Tasks.FindIndex(t => t.Id == task.Id);
         if (index < 0)
@@ -85,6 +104,12 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
             return;
         }
 
+        // Falls back to the stored task's status when no override is given.
+        // The quick status-change dropdown (see UpdateTaskStatus) mutates the
+        // task in place before calling this method, so by that point the
+        // stored task and the incoming task would be the same reference —
+        // an override is required there to still detect the transition.
+        var previousStatus = previousStatusOverride ?? _project.Tasks[index].Status;
         var previous = _project.Tasks[index];
         _project.Tasks[index] = task;
         _project.UpdatedAt = DateTimeOffset.UtcNow;
@@ -97,6 +122,13 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
 
         Canvas.UpdateMarker(task);
         TaskList.Refresh(_project.Tasks);
+
+        if (task.Status == RenovationTaskStatus.Done && previousStatus != RenovationTaskStatus.Done)
+        {
+            ApplyBudgetConsumption(task);
+        }
+
+        RecomputeRecommendations();
     }
 
     /// <summary>
@@ -133,6 +165,7 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
 
         Canvas.RemoveMarker(taskId);
         TaskList.Refresh(_project.Tasks);
+        RecomputeRecommendations();
     }
 
     /// <summary>
@@ -162,9 +195,41 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
             return;
         }
 
+        var previousStatus = task.Status;
         task.Status = newStatus;
         task.UpdatedAt = DateTimeOffset.UtcNow;
 
-        UpdateTask(task);
+        UpdateTask(task, previousStatus);
+    }
+
+    /// <summary>
+    /// Deducts <paramref name="completedTask"/>'s effective time/cost from
+    /// the user's budget profile and persists it, reporting a failure via
+    /// <see cref="SaveFailed"/> without reverting the already-saved task.
+    /// </summary>
+    private void ApplyBudgetConsumption(RenovationTask completedTask)
+    {
+        var profile = _budgetProfileStore.Load(_username);
+        BudgetConsumptionService.ApplyCompletion(profile, completedTask, _project.Tasks);
+
+        try
+        {
+            _budgetProfileStore.Save(_username, profile);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            SaveFailed?.Invoke(this, ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Loads the current budget profile and pushes freshly computed
+    /// recommendations into <see cref="TaskList"/> (FR-014).
+    /// </summary>
+    private void RecomputeRecommendations()
+    {
+        var profile = _budgetProfileStore.Load(_username);
+        var recommendations = TaskRecommendationEngine.Recommend(_project.Tasks, profile);
+        TaskList.UpdateRecommendations(recommendations, profile);
     }
 }

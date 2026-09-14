@@ -30,6 +30,8 @@ public partial class RecentProjectsViewModel : ObservableObject
 
     public event EventHandler? NewProjectRequested;
 
+    public event EventHandler? BudgetSettingsRequested;
+
     public event EventHandler<OpenedProjectEventArgs>? ProjectOpened;
 
     public RecentProjectsViewModel(string username, IProjectStore projectStore, IRecentProjectsStore recentProjectsStore)
@@ -55,6 +57,9 @@ public partial class RecentProjectsViewModel : ObservableObject
 
     [RelayCommand]
     private void NewProject() => NewProjectRequested?.Invoke(this, EventArgs.Empty);
+
+    [RelayCommand]
+    private void BudgetSettings() => BudgetSettingsRequested?.Invoke(this, EventArgs.Empty);
 
     [RelayCommand]
     private void OpenProject(RecentProjectEntry entry) => TryOpen(entry.FilePath);
