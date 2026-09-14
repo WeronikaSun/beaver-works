@@ -71,4 +71,63 @@ public class BudgetConsumptionServiceTests
         Assert.Equal(3, profile.TimeConsumedThisWeekHours);
         Assert.Equal(80, profile.MoneyConsumedThisMonth);
     }
+
+    [Fact]
+    public void ReverseCompletion_EstimatedTask_SubtractsItsOwnEstimate()
+    {
+        var profile = MakeBudget();
+        var task = MakeTask(cost: 150m, timeHours: 3);
+        BudgetConsumptionService.ApplyCompletion(profile, task, [task]);
+
+        BudgetConsumptionService.ReverseCompletion(profile, task, [task]);
+
+        Assert.Equal(0, profile.TimeConsumedThisWeekHours);
+        Assert.Equal(0, profile.MoneyConsumedThisMonth);
+    }
+
+    [Fact]
+    public void ReverseCompletion_UnestimatedTask_SubtractsPlaceholderFromOtherProjectTasks()
+    {
+        var profile = MakeBudget();
+        var estimatedSibling = MakeTask(cost: 200m, timeHours: 8);
+        var unestimatedTask = MakeTask(cost: null, timeHours: null);
+        BudgetConsumptionService.ApplyCompletion(profile, unestimatedTask, [estimatedSibling, unestimatedTask]);
+
+        BudgetConsumptionService.ReverseCompletion(profile, unestimatedTask, [estimatedSibling, unestimatedTask]);
+
+        Assert.Equal(0, profile.TimeConsumedThisWeekHours);
+        Assert.Equal(0, profile.MoneyConsumedThisMonth);
+    }
+
+    [Fact]
+    public void ReverseCompletion_WouldGoNegative_FloorsConsumedAtZeroInsteadOfExceedingDeclaredBudget()
+    {
+        var profile = MakeBudget();
+        profile.TimeConsumedThisWeekHours = 1;
+        profile.MoneyConsumedThisMonth = 10;
+        var task = MakeTask(cost: 150m, timeHours: 3);
+
+        BudgetConsumptionService.ReverseCompletion(profile, task, [task]);
+
+        Assert.Equal(0, profile.TimeConsumedThisWeekHours);
+        Assert.Equal(0, profile.MoneyConsumedThisMonth);
+        // Remaining budget never exceeds the declared budget even though the reversal "overshot".
+        Assert.Equal(profile.WeeklyTimeBudgetHours, profile.RemainingTimeHours);
+        Assert.Equal(profile.MonthlyMoneyBudget, profile.RemainingMoney);
+    }
+
+    [Fact]
+    public void ReverseCompletion_IsInverseOfApplyCompletion_WhenBudgetIsNotExceeded()
+    {
+        var profile = MakeBudget();
+        profile.TimeConsumedThisWeekHours = 5;
+        profile.MoneyConsumedThisMonth = 500;
+        var task = MakeTask(cost: 150m, timeHours: 3);
+
+        BudgetConsumptionService.ApplyCompletion(profile, task, [task]);
+        BudgetConsumptionService.ReverseCompletion(profile, task, [task]);
+
+        Assert.Equal(5, profile.TimeConsumedThisWeekHours);
+        Assert.Equal(500, profile.MoneyConsumedThisMonth);
+    }
 }

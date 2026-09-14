@@ -87,9 +87,11 @@ public static class TaskRecommendationEngine
     /// <summary>
     /// A dependency is "unmet" when the task it points to either no longer
     /// exists in the project or hasn't reached <see cref="RenovationTaskStatus.Done"/>.
+    /// Delegates to <see cref="TaskDependencyStatusResolver"/> so this and
+    /// the Create/Edit task dialogs share one definition.
     /// </summary>
     private static bool HasUnmetDependency(RenovationTask task, IReadOnlyDictionary<Guid, RenovationTask> tasksById) =>
-        task.DependsOnTaskIds.Any(id => !tasksById.TryGetValue(id, out var dependency) || dependency.Status != RenovationTaskStatus.Done);
+        TaskDependencyStatusResolver.HasUnmetDependency(task.DependsOnTaskIds, tasksById);
 
     private static string FormatRationale(RenovationTask task, decimal effectiveTime, decimal effectiveCost, decimal startingRemainingTime, decimal startingRemainingMoney) =>
         // Matches TaskListViewModel's existing "cost.ToString(\"C\")" convention

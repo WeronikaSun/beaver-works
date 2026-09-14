@@ -28,4 +28,27 @@ public static class BudgetConsumptionService
         profile.TimeConsumedThisWeekHours += effectiveTime;
         profile.MoneyConsumedThisMonth += effectiveCost;
     }
+
+    /// <summary>
+    /// The inverse of <see cref="ApplyCompletion"/>, used when a
+    /// previously-<see cref="RenovationTaskStatus.Done"/> task is moved
+    /// back to another status: subtracts <paramref name="reactivatedTask"/>'s
+    /// effective time/cost from the profile's consumed totals, each floored
+    /// at <c>0</c> — mirroring <see cref="UserBudgetProfile.RemainingTimeHours"/>/
+    /// <see cref="UserBudgetProfile.RemainingMoney"/>'s existing floor-at-zero
+    /// pattern, so reversing consumption can never push remaining budget
+    /// above the declared budget. Does not persist the profile — the
+    /// caller owns save timing.
+    /// </summary>
+    public static void ReverseCompletion(UserBudgetProfile profile, RenovationTask reactivatedTask, IReadOnlyList<RenovationTask> allProjectTasks)
+    {
+        var effectiveTime = reactivatedTask.EstimatedTime is { } time
+            ? (decimal)time.TotalHours
+            : EstimatePlaceholderCalculator.GetPlaceholderTimeHours(allProjectTasks);
+
+        var effectiveCost = reactivatedTask.EstimatedCost ?? EstimatePlaceholderCalculator.GetPlaceholderCost(allProjectTasks);
+
+        profile.TimeConsumedThisWeekHours = Math.Max(0, profile.TimeConsumedThisWeekHours - effectiveTime);
+        profile.MoneyConsumedThisMonth = Math.Max(0, profile.MoneyConsumedThisMonth - effectiveCost);
+    }
 }
