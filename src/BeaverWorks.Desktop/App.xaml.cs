@@ -54,6 +54,11 @@ public partial class App : Application
         recentProjectsViewModel.NewProjectRequested += (_, _) => ShowNewProjectDialog();
         recentProjectsViewModel.BudgetSettingsRequested += (_, _) => ShowBudgetSettingsDialog();
         recentProjectsViewModel.ProjectOpened += (_, args) => ShowPlanCanvas(args);
+        recentProjectsViewModel.LogoutRequested += (_, _) =>
+        {
+            _userSession!.SignOut();
+            ShowLogin();
+        };
 
         _mainWindow!.Content = new RecentProjectsView { DataContext = recentProjectsViewModel };
     }
@@ -88,6 +93,7 @@ public partial class App : Application
         workspaceViewModel.NewTaskRequested += (_, position) => ShowNewTaskDialog(workspaceViewModel, position);
         workspaceViewModel.TaskList.EditRequested += (_, taskId) => ShowEditTaskDialog(workspaceViewModel, taskId);
         workspaceViewModel.TaskList.DeleteRequested += (_, taskId) => ConfirmAndDeleteTask(workspaceViewModel, taskId);
+        workspaceViewModel.BackRequested += (_, _) => ShowRecentProjects();
         workspaceViewModel.SaveFailed += (_, message) => MessageBox.Show(
             _mainWindow,
             $"The change couldn't be saved and was reverted: {message}",

@@ -32,6 +32,8 @@ public partial class RecentProjectsViewModel : ObservableObject
 
     public event EventHandler? BudgetSettingsRequested;
 
+    public event EventHandler? LogoutRequested;
+
     public event EventHandler<OpenedProjectEventArgs>? ProjectOpened;
 
     public RecentProjectsViewModel(string username, IProjectStore projectStore, IRecentProjectsStore recentProjectsStore)
@@ -60,6 +62,9 @@ public partial class RecentProjectsViewModel : ObservableObject
 
     [RelayCommand]
     private void BudgetSettings() => BudgetSettingsRequested?.Invoke(this, EventArgs.Empty);
+
+    [RelayCommand]
+    private void Logout() => LogoutRequested?.Invoke(this, EventArgs.Empty);
 
     [RelayCommand]
     private void OpenProject(RecentProjectEntry entry) => TryOpen(entry.FilePath);

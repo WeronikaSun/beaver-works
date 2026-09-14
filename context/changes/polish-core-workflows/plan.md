@@ -373,28 +373,28 @@ No schema changes: `RenovationTask.Status`/`DependsOnTaskIds` and `UserBudgetPro
 
 #### Automated
 
-- [x] 3.1 Build succeeds with 0 warnings
-- [x] 3.2 Core unit tests still pass
+- [x] 3.1 Build succeeds with 0 warnings — 995db17
+- [x] 3.2 Core unit tests still pass — 995db17
 
 #### Manual
 
-- [x] 3.3 Complete a task; confirm it moves from Active to the top of Done and the budget summary reflects consumption
-- [x] 3.4 Complete a second, older task; confirm Done list orders most-recently-completed first
-- [x] 3.5 Reactivate a Done task; confirm it returns to Active and budget summary's remaining time/money increases accordingly
-- [x] 3.6 Reactivate a Done task where reversal would exceed the declared budget; confirm remaining time/money caps at the declared budget
-- [x] 3.7 (adapted) Active list groups by Active → recommended Planned → Blocked → Over-budget, each band sorted by priority/date; Done list no longer shows the rationale line
+- [x] 3.3 Complete a task; confirm it moves from Active to the top of Done and the budget summary reflects consumption — 995db17
+- [x] 3.4 Complete a second, older task; confirm Done list orders most-recently-completed first — 995db17
+- [x] 3.5 Reactivate a Done task; confirm it returns to Active and budget summary's remaining time/money increases accordingly — 995db17
+- [x] 3.6 Reactivate a Done task where reversal would exceed the declared budget; confirm remaining time/money caps at the declared budget — 995db17
+- [x] 3.7 (adapted) Active list groups by Active → recommended Planned → Blocked → Over-budget, each band sorted by priority/date; Done list no longer shows the rationale line — 995db17
 
 ### Phase 4: Navigation — Back Button & Logout
 
 #### Automated
 
-- [ ] 4.1 Build succeeds with 0 warnings
+- [x] 4.1 Build succeeds with 0 warnings
 
 #### Manual
 
-- [ ] 4.2 Click "Back to projects" from an open project; confirm immediate return to Recent Projects with changes intact
-- [ ] 4.3 Click "Logout" from Recent Projects; confirm immediate return to the login screen
-- [ ] 4.4 Log back in as a different user and confirm the session reflects the new user
+- [x] 4.2 Click "Back to projects" from an open project; confirm immediate return to Recent Projects with changes intact
+- [x] 4.3 Click "Logout" from Recent Projects; confirm immediate return to the login screen
+- [x] 4.4 Log back in as a different user and confirm the session reflects the new user
 
 ### Phase 5: Registration Budget Fields
 

@@ -3,6 +3,7 @@ using BeaverWorks.Core.Models;
 using BeaverWorks.Core.Persistence;
 using BeaverWorks.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace BeaverWorks.Desktop.ViewModels;
 
@@ -37,6 +38,9 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
 
     /// <summary>Raised with a newly clicked plan position when empty plan space is clicked (relayed from Canvas, unchanged).</summary>
     public event EventHandler<PlanPoint>? NewTaskRequested;
+
+    /// <summary>Raised when the user asks to leave the workspace and return to the Recent Projects panel; executes immediately, no confirmation (auto-save already covers unsaved-state risk).</summary>
+    public event EventHandler? BackRequested;
 
     /// <summary>
     /// Raised when persisting a mutation to disk fails; the in-memory
@@ -296,4 +300,7 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
         var recommendations = TaskRecommendationEngine.Recommend(_project.Tasks, profile);
         TaskList.UpdateRecommendations(recommendations, profile);
     }
+
+    [RelayCommand]
+    private void Back() => BackRequested?.Invoke(this, EventArgs.Empty);
 }

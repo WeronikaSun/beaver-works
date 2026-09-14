@@ -25,7 +25,8 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
             <Button Content="New project" Command="{Binding NewProjectCommand}" Padding="12,4" Margin="0,0,8,0" />
             <Button Content="Open from disk..." Command="{Binding OpenFromDiskCommand}" Padding="12,4" Margin="0,0,8,0" />
-            <Button Content="Budget settings" Command="{Binding BudgetSettingsCommand}" Padding="12,4" />
+            <Button Content="Budget settings" Command="{Binding BudgetSettingsCommand}" Padding="12,4" Margin="0,0,8,0" />
+            <Button Content="Logout" Command="{Binding LogoutCommand}" Padding="12,4" />
         </StackPanel>
 
         <TextBlock Grid.Row="2"
