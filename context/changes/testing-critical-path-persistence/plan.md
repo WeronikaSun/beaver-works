@@ -213,11 +213,11 @@ Not applicable — new test project and new test only, no production code or dat
 
 #### Automated
 
-- [x] 2.1 New integration test passes
-- [x] 2.2 Full solution build still 0 warnings
-- [x] 2.3 Existing test suites unaffected
+- [x] 2.1 New integration test passes — 6bf5f44
+- [x] 2.2 Full solution build still 0 warnings — 6bf5f44
+- [x] 2.3 Existing test suites unaffected — 6bf5f44
 
 #### Manual
 
-- [x] 2.4 Re-running the test twice in a row passes both times
-- [x] 2.5 test-plan.md §6.2 reads as a usable, concrete recipe
+- [x] 2.4 Re-running the test twice in a row passes both times — 6bf5f44
+- [x] 2.5 test-plan.md §6.2 reads as a usable, concrete recipe — 6bf5f44

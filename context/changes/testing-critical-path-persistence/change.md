@@ -1,7 +1,7 @@
 ---
 change_id: testing-critical-path-persistence
 title: Critical-path persistence coverage
-status: implementing
+status: implemented
 created: 2026-09-14
 updated: 2026-09-14
 archived_at: null
