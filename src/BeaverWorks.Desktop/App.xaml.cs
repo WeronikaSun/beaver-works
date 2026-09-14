@@ -42,7 +42,7 @@ public partial class App : Application
 
     private void ShowLogin()
     {
-        var loginViewModel = new LoginViewModel(_authService!, _userSession!);
+        var loginViewModel = new LoginViewModel(_authService!, _userSession!, _budgetProfileStore!);
         loginViewModel.LoginSucceeded += (_, _) => ShowRecentProjects();
 
         _mainWindow!.Content = new LoginView { DataContext = loginViewModel };

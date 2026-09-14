@@ -388,22 +388,22 @@ No schema changes: `RenovationTask.Status`/`DependsOnTaskIds` and `UserBudgetPro
 
 #### Automated
 
-- [x] 4.1 Build succeeds with 0 warnings
+- [x] 4.1 Build succeeds with 0 warnings — a9b1ecc
 
 #### Manual
 
-- [x] 4.2 Click "Back to projects" from an open project; confirm immediate return to Recent Projects with changes intact
-- [x] 4.3 Click "Logout" from Recent Projects; confirm immediate return to the login screen
-- [x] 4.4 Log back in as a different user and confirm the session reflects the new user
+- [x] 4.2 Click "Back to projects" from an open project; confirm immediate return to Recent Projects with changes intact — a9b1ecc
+- [x] 4.3 Click "Logout" from Recent Projects; confirm immediate return to the login screen — a9b1ecc
+- [x] 4.4 Log back in as a different user and confirm the session reflects the new user — a9b1ecc
 
 ### Phase 5: Registration Budget Fields
 
 #### Automated
 
-- [ ] 5.1 Build succeeds with 0 warnings
+- [x] 5.1 Build succeeds with 0 warnings
 
 #### Manual
 
-- [ ] 5.2 Register with both budget fields filled with positive values; confirm success and that Budget Settings shows the same values afterward
-- [ ] 5.3 Attempt registration with blank/zero/negative budget fields; confirm it's blocked with an error message
-- [ ] 5.4 Confirm budget fields are hidden/not required in "Log in" mode
+- [x] 5.2 Register with both budget fields filled with positive values; confirm success and that Budget Settings shows the same values afterward
+- [x] 5.3 Attempt registration with blank/zero/negative budget fields; confirm it's blocked with an error message
+- [x] 5.4 Confirm budget fields are hidden/not required in "Log in" mode
