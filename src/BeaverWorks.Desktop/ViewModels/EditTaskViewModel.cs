@@ -30,23 +30,16 @@ public partial class TaskDependencyOption : ObservableObject
 
 /// <summary>
 /// Backs the "Edit task" dialog, pre-populated from an existing task and
-/// covering every FR-007 field plus dependency selection — unlike
-/// <see cref="NewTaskViewModel"/>, which only covers title/description/
-/// priority/cost at creation time. Mirrors its <c>Create</c>/<c>Cancel</c>
-/// event pattern (<see cref="TaskUpdated"/>/<see cref="Cancelled"/>) so
+/// covering every FR-007 field plus dependency selection — matches
+/// <see cref="NewTaskViewModel"/>'s field coverage except for
+/// <see cref="Status"/>, which Create doesn't expose as a free choice.
+/// Mirrors its <c>Create</c>/<c>Cancel</c> event pattern
+/// (<see cref="TaskUpdated"/>/<see cref="Cancelled"/>) so
 /// <c>EditTaskDialog.xaml.cs</c> can wire up identically to
 /// <c>NewTaskDialog.xaml.cs</c>.
 /// </summary>
 public partial class EditTaskViewModel : ObservableObject
 {
-    /// <summary>
-    /// Upper bound for <see cref="EstimatedTimeHours"/> so a very large
-    /// value can't overflow <see cref="TimeSpan"/> when converted on save.
-    /// ~100,000 hours (over 11 years) comfortably covers any real
-    /// renovation estimate while staying well under <see cref="TimeSpan.MaxValue"/>.
-    /// </summary>
-    private const decimal MaxEstimatedTimeHours = 100_000m;
-
     private readonly RenovationTask _task;
     private readonly Project _project;
 
@@ -77,7 +70,7 @@ public partial class EditTaskViewModel : ObservableObject
 
     public IReadOnlyList<RenovationTaskStatus> StatusOptions { get; } = Enum.GetValues<RenovationTaskStatus>();
 
-    /// <summary>Every other task in the project, selectable as a dependency; entries in <see cref="RenovationTask.DependsOnTaskIds"/> start checked.</summary>
+    /// <summary>Every other task in the project, selectable as a dependency (excludes <see cref="RenovationTaskStatus.Done"/> tasks); entries in <see cref="RenovationTask.DependsOnTaskIds"/> start checked.</summary>
     public ObservableCollection<TaskDependencyOption> DependencyOptions { get; }
 
     public event EventHandler<RenovationTask>? TaskUpdated;
@@ -98,8 +91,7 @@ public partial class EditTaskViewModel : ObservableObject
         _roomId = task.RoomId;
 
         DependencyOptions = new ObservableCollection<TaskDependencyOption>(
-            allProjectTasks
-                .Where(t => t.Id != task.Id)
+            TaskDependencyStatusResolver.GetSelectableDependencies(allProjectTasks, excludeTaskId: task.Id)
                 .Select(t => new TaskDependencyOption(t.Id, t.Title, task.DependsOnTaskIds.Contains(t.Id))));
     }
 
@@ -108,37 +100,34 @@ public partial class EditTaskViewModel : ObservableObject
     {
         ErrorMessage = null;
 
+        var titleError = TaskFieldValidator.ValidateTitle(Title);
+        if (titleError is not null)
+        {
+            ErrorMessage = titleError;
+            return;
+        }
+
+        var priorityError = TaskFieldValidator.ValidatePriority(Priority);
+        if (priorityError is not null)
+        {
+            ErrorMessage = priorityError;
+            return;
+        }
+
+        var costError = TaskFieldValidator.ValidateEstimatedCost(EstimatedCost);
+        if (costError is not null)
+        {
+            ErrorMessage = costError;
+            return;
+        }
+
+        if (!TaskFieldValidator.TryResolveEstimatedTime(EstimatedTimeHours, out var estimatedTime, out var timeError))
+        {
+            ErrorMessage = timeError;
+            return;
+        }
+
         var trimmedTitle = Title.Trim();
-        if (trimmedTitle.Length == 0)
-        {
-            ErrorMessage = "Please enter a title.";
-            return;
-        }
-
-        if (Priority < RenovationTask.MinPriority || Priority > RenovationTask.MaxPriority)
-        {
-            ErrorMessage = $"Priority must be between {RenovationTask.MinPriority} and {RenovationTask.MaxPriority}.";
-            return;
-        }
-
-        if (EstimatedCost is < 0)
-        {
-            ErrorMessage = "Estimated cost cannot be negative.";
-            return;
-        }
-
-        if (EstimatedTimeHours is < 0)
-        {
-            ErrorMessage = "Estimated time cannot be negative.";
-            return;
-        }
-
-        if (EstimatedTimeHours > MaxEstimatedTimeHours)
-        {
-            ErrorMessage = $"Estimated time is too large (max {MaxEstimatedTimeHours:N0} hours).";
-            return;
-        }
-
         var selectedDependencyIds = DependencyOptions.Where(o => o.IsSelected).Select(o => o.Id).ToList();
 
         if (TaskDependencyValidator.WouldCreateCycle(_project, _task.Id, selectedDependencyIds))
@@ -147,23 +136,12 @@ public partial class EditTaskViewModel : ObservableObject
             return;
         }
 
-        TimeSpan? estimatedTime;
-        try
-        {
-            estimatedTime = EstimatedTimeHours is { } hours ? TimeSpan.FromHours((double)hours) : null;
-        }
-        catch (OverflowException)
-        {
-            ErrorMessage = "Estimated time is out of range.";
-            return;
-        }
-
         var updated = new RenovationTask
         {
             Id = _task.Id,
             Title = trimmedTitle,
             Description = string.IsNullOrWhiteSpace(Description) ? null : Description,
-            Status = Status,
+            Status = TaskDependencyStatusResolver.ResolveStatusOnEdit(Status, _task.Status, selectedDependencyIds, _project.Tasks),
             Priority = Priority,
             EstimatedCost = EstimatedCost,
             EstimatedTime = estimatedTime,

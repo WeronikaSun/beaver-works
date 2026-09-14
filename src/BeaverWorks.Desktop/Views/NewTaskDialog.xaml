@@ -8,46 +8,82 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:NewTaskViewModel}"
         Title="New task"
-        Width="380"
+        Width="420"
         SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
     <Window.Resources>
         <local:NullOrEmptyStringToVisibilityConverter x:Key="NullOrEmptyStringToVisibilityConverter" />
     </Window.Resources>
-    <Grid Margin="24">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="640">
+        <Grid Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Title" Margin="0,0,0,4" />
-        <TextBox Grid.Row="1"
-                 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                 Margin="0,0,0,12" />
+            <TextBlock Grid.Row="0" Text="Title" Margin="0,0,0,4" />
+            <TextBox Grid.Row="1"
+                     Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,12" />
 
-        <TextBlock Grid.Row="2" Text="Description (optional)" Margin="0,0,0,4" />
-        <TextBox Grid.Row="3"
-                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                 AcceptsReturn="True"
-                 Height="60"
-                 TextWrapping="Wrap"
-                 Margin="0,0,0,12" />
+            <TextBlock Grid.Row="2" Text="Description (optional)" Margin="0,0,0,4" />
+            <TextBox Grid.Row="3"
+                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                     AcceptsReturn="True"
+                     Height="60"
+                     TextWrapping="Wrap"
+                     Margin="0,0,0,12" />
 
-        <TextBlock Grid.Row="4"
-                   Text="{Binding ErrorMessage}"
-                   Foreground="Red"
-                   TextWrapping="Wrap"
-                   Margin="0,0,0,8"
-                   Visibility="{Binding ErrorMessage, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}" />
+            <TextBlock Grid.Row="4" Text="Priority (1-5)" Margin="0,0,0,4" />
+            <TextBox Grid.Row="5"
+                     Text="{Binding Priority, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                     Margin="0,0,0,12" />
 
-        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Padding="12,4" Margin="0,0,8,0" />
-            <Button Content="Create" Command="{Binding CreateCommand}" Padding="12,4" IsDefault="True" />
-        </StackPanel>
-    </Grid>
+            <TextBlock Grid.Row="6" Text="Estimated cost / time (hours) / room" Margin="0,0,0,4" />
+            <Grid Grid.Row="7" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding EstimatedCost, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                <TextBox Grid.Column="2" Text="{Binding EstimatedTimeHours, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                <TextBox Grid.Column="4" Text="{Binding RoomId, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+
+            <TextBlock Grid.Row="8" Text="Depends on" Margin="0,0,0,4" />
+            <ItemsControl Grid.Row="9" ItemsSource="{Binding DependencyOptions}" Margin="0,0,0,12">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Title}" IsChecked="{Binding IsSelected}" Margin="0,0,0,4" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Grid.Row="10"
+                       Text="{Binding ErrorMessage}"
+                       Foreground="Red"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,8"
+                       Visibility="{Binding ErrorMessage, Converter={StaticResource NullOrEmptyStringToVisibilityConverter}}" />
+
+            <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel" Command="{Binding CancelCommand}" Padding="12,4" Margin="0,0,8,0" />
+                <Button Content="Create" Command="{Binding CreateCommand}" Padding="12,4" IsDefault="True" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Window>

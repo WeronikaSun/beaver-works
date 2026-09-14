@@ -112,11 +112,48 @@ public partial class ProjectWorkspaceViewModel : ObservableObject
         var previousStatus = previousStatusOverride ?? _project.Tasks[index].Status;
         var previous = _project.Tasks[index];
         _project.Tasks[index] = task;
+
+        // A task transitioning into Done may unblock other tasks that list
+        // it as a dependency. Re-resolve those dependents' status here so
+        // the unblock lands in the same save as the transition, instead of
+        // requiring each dependent to be individually re-opened and
+        // re-saved via the Edit dialog.
+        var cascaded = new List<(RenovationTask Task, RenovationTaskStatus PreviousStatus, DateTimeOffset PreviousUpdatedAt)>();
+        if (task.Status == RenovationTaskStatus.Done && previousStatus != RenovationTaskStatus.Done)
+        {
+            foreach (var candidate in _project.Tasks)
+            {
+                if (candidate.Id == task.Id
+                    || candidate.Status != RenovationTaskStatus.Blocked
+                    || !candidate.DependsOnTaskIds.Contains(task.Id))
+                {
+                    continue;
+                }
+
+                var resolvedStatus = TaskDependencyStatusResolver.ResolveStatusOnEdit(
+                    candidate.Status, candidate.Status, candidate.DependsOnTaskIds, _project.Tasks);
+
+                if (resolvedStatus == candidate.Status)
+                {
+                    continue;
+                }
+
+                cascaded.Add((candidate, candidate.Status, candidate.UpdatedAt));
+                candidate.Status = resolvedStatus;
+                candidate.UpdatedAt = DateTimeOffset.UtcNow;
+            }
+        }
+
         _project.UpdatedAt = DateTimeOffset.UtcNow;
 
         if (!TrySave())
         {
             _project.Tasks[index] = previous;
+            foreach (var (cascadedTask, cascadedPreviousStatus, cascadedPreviousUpdatedAt) in cascaded)
+            {
+                cascadedTask.Status = cascadedPreviousStatus;
+                cascadedTask.UpdatedAt = cascadedPreviousUpdatedAt;
+            }
             return;
         }
 

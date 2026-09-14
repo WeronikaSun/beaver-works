@@ -95,4 +95,49 @@ public class TaskDependencyStatusResolverTests
 
         Assert.Equal(RenovationTaskStatus.Planned, result);
     }
+
+    [Fact]
+    public void ResolveStatusOnEdit_UnmetDependency_ForcesBlocked()
+    {
+        var dependency = MakeTask(RenovationTaskStatus.Planned);
+        var allTasks = new List<RenovationTask> { dependency };
+
+        var result = TaskDependencyStatusResolver.ResolveStatusOnEdit(
+            RenovationTaskStatus.Planned, RenovationTaskStatus.Planned, [dependency.Id], allTasks);
+
+        Assert.Equal(RenovationTaskStatus.Blocked, result);
+    }
+
+    [Fact]
+    public void ResolveStatusOnEdit_PreviouslyBlockedWithNowMetDependency_FallsBackToPlanned()
+    {
+        var dependency = MakeTask(RenovationTaskStatus.Done);
+        var allTasks = new List<RenovationTask> { dependency };
+
+        var result = TaskDependencyStatusResolver.ResolveStatusOnEdit(
+            RenovationTaskStatus.Blocked, RenovationTaskStatus.Blocked, [dependency.Id], allTasks);
+
+        Assert.Equal(RenovationTaskStatus.Planned, result);
+    }
+
+    [Fact]
+    public void ResolveStatusOnEdit_PreviouslyBlockedWithNoDependencies_KeepsExplicitBlockedChoice()
+    {
+        var result = TaskDependencyStatusResolver.ResolveStatusOnEdit(
+            RenovationTaskStatus.Blocked, RenovationTaskStatus.Blocked, [], []);
+
+        Assert.Equal(RenovationTaskStatus.Blocked, result);
+    }
+
+    [Fact]
+    public void ResolveStatusOnEdit_NotPreviouslyBlocked_ReturnsRequestedStatusUnchanged()
+    {
+        var dependency = MakeTask(RenovationTaskStatus.Done);
+        var allTasks = new List<RenovationTask> { dependency };
+
+        var result = TaskDependencyStatusResolver.ResolveStatusOnEdit(
+            RenovationTaskStatus.Blocked, RenovationTaskStatus.Planned, [dependency.Id], allTasks);
+
+        Assert.Equal(RenovationTaskStatus.Blocked, result);
+    }
 }

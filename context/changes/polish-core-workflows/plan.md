@@ -351,15 +351,15 @@ No schema changes: `RenovationTask.Status`/`DependsOnTaskIds` and `UserBudgetPro
 
 #### Automated
 
-- [x] 1.1 Build succeeds with 0 warnings
-- [x] 1.2 Core unit tests pass (TaskFieldValidatorTests, TaskDependencyStatusResolverTests, extended BudgetConsumptionServiceTests, unchanged TaskRecommendationEngineTests)
+- [x] 1.1 Build succeeds with 0 warnings — c7d07c2
+- [x] 1.2 Core unit tests pass (TaskFieldValidatorTests, TaskDependencyStatusResolverTests, extended BudgetConsumptionServiceTests, unchanged TaskRecommendationEngineTests) — c7d07c2
 
 ### Phase 2: Task Create/Edit Dialog Parity
 
 #### Automated
 
-- [ ] 2.1 Build succeeds with 0 warnings
-- [ ] 2.2 Core unit tests still pass
+- [x] 2.1 Build succeeds with 0 warnings
+- [x] 2.2 Core unit tests still pass
 
 #### Manual
 

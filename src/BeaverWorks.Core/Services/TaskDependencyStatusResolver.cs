@@ -47,6 +47,40 @@ public static class TaskDependencyStatusResolver
     }
 
     /// <summary>
+    /// Same as <see cref="ResolveStatus"/>, but for editing an existing task:
+    /// additionally clears a stale <see cref="RenovationTaskStatus.Blocked"/>
+    /// back to <see cref="RenovationTaskStatus.Planned"/> once every
+    /// dependency is met, so a task doesn't stay stuck on Blocked forever
+    /// just because the edit dialog's status field still shows its old
+    /// value. This only applies when the task actually has dependencies
+    /// (<paramref name="dependsOnIds"/> is non-empty) and was already
+    /// <paramref name="previousStatus"/> == Blocked — a task deliberately
+    /// blocked with no dependencies at all keeps that explicit choice.
+    /// </summary>
+    public static RenovationTaskStatus ResolveStatusOnEdit(
+        RenovationTaskStatus requestedStatus,
+        RenovationTaskStatus previousStatus,
+        IReadOnlyList<Guid> dependsOnIds,
+        IReadOnlyList<RenovationTask> allProjectTasks)
+    {
+        var tasksById = allProjectTasks.ToDictionary(t => t.Id);
+
+        if (HasUnmetDependency(dependsOnIds, tasksById))
+        {
+            return RenovationTaskStatus.Blocked;
+        }
+
+        if (requestedStatus == RenovationTaskStatus.Blocked
+            && previousStatus == RenovationTaskStatus.Blocked
+            && dependsOnIds.Count > 0)
+        {
+            return RenovationTaskStatus.Planned;
+        }
+
+        return requestedStatus;
+    }
+
+    /// <summary>
     /// A dependency is "unmet" when the task it points to either no longer
     /// exists in <paramref name="tasksById"/> or hasn't reached
     /// <see cref="RenovationTaskStatus.Done"/>.

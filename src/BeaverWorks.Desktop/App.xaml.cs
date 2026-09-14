@@ -100,7 +100,7 @@ public partial class App : Application
 
     private void ShowNewTaskDialog(ProjectWorkspaceViewModel workspaceViewModel, PlanPoint position)
     {
-        var newTaskViewModel = new NewTaskViewModel(position);
+        var newTaskViewModel = new NewTaskViewModel(position, workspaceViewModel.TaskList.Tasks);
         newTaskViewModel.TaskCreated += (_, task) => workspaceViewModel.AddTask(task);
 
         var dialog = new NewTaskDialog(newTaskViewModel) { Owner = _mainWindow };
