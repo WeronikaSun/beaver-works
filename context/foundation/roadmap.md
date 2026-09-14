@@ -59,7 +59,7 @@ on the login foundation.
 | F-01 | local-auth-and-profiles | (foundation) local login + password storage as a salted hash ready | — | FR-001, Access Control | done |
 | S-01 | pin-and-persist-task | pin a task to the floor plan; it survives save, close, and reopen | F-01 | US-01, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-012 | done |
 | S-02 | manage-tasks | view, edit (including status), and delete tasks from the list | F-01, S-01 | US-01, FR-009, FR-010, FR-011 | done |
-| S-03 | budget-based-recommendations | declare a time/money budget and see a priority-ordered recommendation that fits the budget | F-01, S-01, S-02 | US-02, FR-013, FR-014, FR-015, FR-016 | in-progress |
+| S-03 | budget-based-recommendations | declare a time/money budget and see a priority-ordered recommendation that fits the budget | F-01, S-01, S-02 | US-02, FR-013, FR-014, FR-015, FR-016 | done |
 
 ## Baseline
 
@@ -160,7 +160,7 @@ NOT rebuild it.
   status and dependencies between tasks, which only exist once S-02's
   editing is in place; sequencing it last avoids building budget math on
   inputs that don't exist yet.
-- **Status:** in-progress
+- **Status:** done
 
 ## Backlog hand-off
 
@@ -217,3 +217,4 @@ _(empty — this is the first milestone)_
 - **F-01: (foundation) local login + password storage as a salted hash ready** — Archived 2026-09-13 → `context/archive/2026-09-13-local-auth-and-profiles/`. Lesson: —.
 - **S-01: pin a task to the floor plan; it survives save, close, and reopen** — Archived 2026-09-13 → `context/archive/2026-09-13-pin-and-persist-task/`. Lesson: —.
 - **S-02: the user can see the task list and the details of a selected task, edit a task (including changing its status, which immediately updates the marker color), and delete a task.** — Archived 2026-09-14 → `context/archive/2026-09-13-manage-tasks/`. Lesson: —.
+- **S-03: declare a weekly time budget and a monthly money budget in their profile, open a recommendations view showing a priority-ordered list of tasks that fit within the remaining budget (excluding done/active/blocked tasks or tasks with unmet dependencies) along with a short rationale, and see that budgets decrease as tasks are completed and reset automatically at the start of the next calendar period.** — Archived 2026-09-14 → `context/archive/2026-09-14-budget-based-recommendations/`. Lesson: —.
